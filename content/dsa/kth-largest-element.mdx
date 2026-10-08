@@ -1,0 +1,140 @@
+---
+{
+  "slug": "kth-largest-element",
+  "title": "Kth Largest Element in an Array",
+  "category": "dsa",
+  "topic": "Heap & Selection",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Facebook"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Unsorted integer array এবং k দেওয়া আছে। sorted order-এ k-th largest value ফেরত দাও।",
+  "approach": "k size-এর min-heap রাখো। প্রতিটি number heap-এ রাখার পর size k ছাড়ালে smallest pop করো; শেষে heap top হলো k-th largest।",
+  "complexity": {
+    "time": "O(n log k)",
+    "space": "O(k)"
+  },
+  "edges": [
+    "Duplicate value আলাদা array occurrence হিসেবে গণনা হয়।",
+    "k 1 থেকে array length-এর মধ্যে।",
+    "Negative number-এ min-heap logic অপরিবর্তিত।"
+  ],
+  "related": [
+    "top-k-frequent-elements",
+    "binary-search"
+  ],
+  "front": "k-th largest খুঁজতে size-k min-heap কেন কাজ করে?",
+  "back": "Heap-এ সবসময় সবচেয়ে বড় kটি দেখা value রাখা হয়। তাদের মধ্যে smallest হলো পুরো দেখা অংশের k-th largest; সব element শেষে একই নিয়মের ফল চূড়ান্ত উত্তর।",
+  "summary": "k size-এর min-heap রাখো। প্রতিটি number heap-এ রাখার পর size k ছাড়ালে smallest pop করো; শেষে heap top হলো k-th largest।",
+  "tags": [
+    "heap",
+    "selection",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "nums = [3, 2, 1, 5, 6, 4], k = 2",
+    "output": "5"
+  },
+  "order": 19
+}
+---
+
+## Problem
+
+Unsorted integer array এবং k দেওয়া আছে। sorted order-এ k-th largest value ফেরত দাও।
+
+## Example
+
+**Input:** `nums = [3, 2, 1, 5, 6, 4], k = 2`
+
+**Output:** `5`
+
+## Approach বাংলায়
+
+k size-এর min-heap রাখো। প্রতিটি number heap-এ রাখার পর size k ছাড়ালে smallest pop করো; শেষে heap top হলো k-th largest।
+
+Size k min-heap-এ এ পর্যন্ত দেখা kটি বৃহত্তম value থাকে। Heap top এই kটির মধ্যে সবচেয়ে ছোট, তাই সেটিই kth largest।
+
+## Python solution
+
+```python
+import heapq
+
+def find_kth_largest(nums, k):
+    heap = []
+    for value in nums:
+        heapq.heappush(heap, value)
+        if len(heap) > k:
+            heapq.heappop(heap)
+    return heap[0]
+```
+
+## JavaScript solution
+
+```javascript
+function findKthLargest(nums, k) {
+  const heap = [];
+  const push = (value) => {
+    heap.push(value);
+    let index = heap.length - 1;
+    while (index > 0) {
+      const parent = Math.floor((index - 1) / 2);
+      if (heap[parent] <= heap[index]) break;
+      [heap[parent], heap[index]] = [heap[index], heap[parent]];
+      index = parent;
+    }
+  };
+  const pop = () => {
+    const root = heap[0];
+    const last = heap.pop();
+    if (heap.length) {
+      heap[0] = last;
+      let index = 0;
+      while (true) {
+        const left = index * 2 + 1;
+        const right = left + 1;
+        let smallest = index;
+        if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
+        if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
+        if (smallest === index) break;
+        [heap[index], heap[smallest]] = [heap[smallest], heap[index]];
+        index = smallest;
+      }
+    }
+    return root;
+  };
+  for (const value of nums) {
+    push(value);
+    if (heap.length > k) pop();
+  }
+  return heap[0];
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n log k) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(k) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Duplicate value আলাদা array occurrence হিসেবে গণনা হয়।
+- k 1 থেকে array length-এর মধ্যে।
+- Negative number-এ min-heap logic অপরিবর্তিত।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: top-k-frequent-elements, binary-search।

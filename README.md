@@ -1,0 +1,177 @@
+# InterviewPrep BD
+
+![Made in Bangladesh](https://img.shields.io/badge/Made%20in-Bangladesh-006a4e?style=for-the-badge&labelColor=f42a41)
+
+Free, bilingual coding interview preparation with Bengali explanations, Python and JavaScript DSA solutions, system design walkthroughs, database fundamentals, STAR-based behavioral examples, and Bangladesh-focused interview advice.
+
+**Creator:** RA Fahim · [rafahim.com](https://rafahim.com) · [GitHub](https://github.com/rafahim) · Dhaka, Bangladesh
+
+## Features
+
+- 60 authored MDX lessons across DSA, system design, database, behavioral, programming languages and Bangladesh interview topics.
+- Question browser with fuzzy search, Cmd/Ctrl+K quick search, difficulty, category, topic, company, language and frequency filters, plus sorting.
+- Question detail pages with Bengali explanations, Python and JavaScript solutions for all 20 DSA questions, complexity, edge cases, related questions, copy/share/bookmark and feedback.
+- Practice workspace with random picker, five-question mock sessions, a configurable timer, device-local notes and self-rating.
+- Progress dashboard with todo, in-progress, solved and needs-review states, an activity streak, review queue and SM-2 spaced-repetition scheduling.
+- Auto-generated flashcards, optional Giscus discussions, GitHub contribution links and optional Supabase feedback storage.
+- Next.js 14 App Router, TypeScript, Tailwind CSS, MDX rendering, Fuse.js search, Shiki-powered syntax highlighting and responsive dark UI.
+- Static generation for question routes, SEO metadata, canonical URLs, Open Graph/Twitter tags, JSON-LD, robots.txt, sitemap.xml, manifest, humans.txt, security.txt, favicon and OG artwork.
+- No account is required for practice. Progress, bookmarks and notes stay in the current browser unless you choose to configure server-side feedback storage.
+
+## Local development
+
+Requirements: Node.js 18.17 or newer and npm. Python 3 is required only for the optional scaffold/ZIP scripts.
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000/interview-prep/`. The app uses the `/interview-prep` base path to match its canonical URL. Keep that route prefix in your local links and deployment setup.
+
+Build and check before shipping:
+
+```bash
+npm run typecheck
+npm run build
+npm run start
+```
+
+The dev and build lifecycle refreshes `public/sitemap.xml` from the MDX files. To refresh it directly:
+
+```bash
+npm run generate:sitemap
+```
+
+## Repository files
+
+```text
+app/                  App Router pages and API routes
+components/            Shared UI and client-side interactions
+content/               60 authored MDX questions in six categories
+lib/                   Content loading, SEO, progress and SM-2 helpers
+types/                 Shared TypeScript types
+public/                Search engine files, manifest and vector artwork
+scripts/               Sitemap generation and project scaffolding
+setup.sh               Rebuild the project tree and ZIP on macOS/Linux
+setup.ps1              Rebuild the project tree and ZIP on Windows
+```
+
+## Content format and MDX template
+
+Create a new `.mdx` file in the relevant `content/<category>/` folder. The frontmatter is JSON-formatted YAML so nested fields remain easy to edit.
+
+```mdx
+---
+{
+  "slug": "example-question",
+  "title": "Example Interview Question",
+  "category": "dsa",
+  "topic": "Arrays",
+  "difficulty": "Easy",
+  "companies": ["Google", "Amazon"],
+  "languages": ["Python", "JavaScript"],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Write the exact interview prompt here.",
+  "approach": "বাংলায় intuition, invariant এবং implementation strategy ব্যাখ্যা করো।",
+  "complexity": { "time": "O(n)", "space": "O(n)" },
+  "edges": ["Empty input", "Duplicate values"],
+  "related": ["two-sum"],
+  "front": "What should the learner recall?",
+  "back": "A concise, accurate answer in Bengali.",
+  "summary": "Search-friendly summary of this lesson.",
+  "tags": ["arrays", "hash-map"],
+  "examples": { "input": "[2, 7], target = 9", "output": "[0, 1]" },
+  "order": 100
+}
+---
+
+## Problem
+
+Write the complete problem and constraints in clear language.
+
+## Approach বাংলায়
+
+Explain the idea, why it works, and where the trade-offs appear.
+
+## Example
+
+Show input, output and a short walkthrough.
+
+## Complexity
+
+Explain time and auxiliary-space cost.
+
+## Edge cases
+
+List testable edge cases with short explanations.
+```
+
+For DSA lessons, include both Python and JavaScript fenced code blocks. Syntax highlighting is produced by Shiki through `rehype-pretty-code`. After adding a question, check `npm run typecheck`, verify the route, and refresh the sitemap.
+
+## Local data and optional Supabase feedback
+
+Bookmarks, progress, notes, activity and review scheduling use browser localStorage. They do not require Supabase.
+
+To persist question feedback, create a Supabase table with a minimal schema such as:
+
+```sql
+create table if not exists public.question_feedback (
+  id bigint generated by default as identity primary key,
+  slug text not null,
+  rating text not null check (rating in ('helpful', 'needs-work')),
+  created_at timestamptz not null default now()
+);
+```
+
+Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the server environment. Never add the service role key to a `NEXT_PUBLIC_` variable or commit a real secret. Enable suitable row-level security and server-only access before using this table in production.
+
+## Giscus community comments
+
+Giscus is optional. Configure these values in the deployment environment after enabling Discussions and installing the Giscus GitHub App for the repository:
+
+- `NEXT_PUBLIC_GISCUS_REPO`
+- `NEXT_PUBLIC_GISCUS_REPO_ID`
+- `NEXT_PUBLIC_GISCUS_CATEGORY`
+- `NEXT_PUBLIC_GISCUS_CATEGORY_ID`
+
+The app shows a GitHub Discussions link until repository and category IDs are provided.
+
+## Vercel deployment
+
+1. Push the repository to GitHub.
+2. Import the repository in Vercel and use the default Next.js framework preset.
+3. Keep the repository root as the project root; Vercel will install dependencies and run `next build`.
+4. Configure the intended URL routing so the app is served at `https://rafahim.com/interview-prep/`. The Next.js `basePath` is intentionally `/interview-prep` to match the canonical URLs. If this repository is deployed as its own Vercel project, route the `/interview-prep` path from the parent site to this deployment using the parent site's rewrite or your hosting platform's path-routing feature.
+5. Add optional Giscus/Supabase environment values only when using those integrations.
+6. After deployment, open `/interview-prep/robots.txt`, `/interview-prep/sitemap.xml`, and a question URL to confirm the path routing and canonical metadata.
+
+## SEO checklist
+
+- [ ] Keep the title template `%s | InterviewPrep BD by RA Fahim` and the requested home title.
+- [ ] Confirm canonical URLs use `https://rafahim.com/interview-prep/` and its child routes.
+- [ ] Confirm Open Graph image and Twitter creator `@rafahimn` render correctly.
+- [ ] Confirm WebSite, Person, ItemList and TechArticle JSON-LD in rendered HTML.
+- [ ] Run `npm run generate:sitemap` after content edits and submit the sitemap in Google Search Console.
+- [ ] Check robots.txt, metadata descriptions, headings, internal links and mobile layout.
+- [ ] Do not index draft lessons until their content is complete and useful.
+- [ ] Add the deployed canonical property to Search Console and verify URL-prefix routing.
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md), use the MDX template above, and open a pull request. Prefer practical examples, accurate complexity analysis and clear Bengali explanations. When updating content, make sure the metadata and solution agree.
+
+## Author
+
+**RA Fahim** is a Web Developer & Creator based in Dhaka, Bangladesh, focused on full-stack web development. This project is built as a free resource for learners preparing for coding interviews in Bengali and English.
+
+- Website: [rafahim.com](https://rafahim.com)
+- GitHub: [github.com/rafahim](https://github.com/rafahim)
+- Email: [dev@rafahim.com](mailto:dev@rafahim.com)
+- X: [@rafahimn](https://twitter.com/rafahimn)
+- LinkedIn: [rafahimn](https://linkedin.com/in/rafahimn)
+
+## License
+
+MIT. See [LICENSE](LICENSE).

@@ -1,0 +1,111 @@
+---
+{
+  "slug": "two-sum",
+  "title": "Two Sum",
+  "category": "dsa",
+  "topic": "Arrays & Hashing",
+  "difficulty": "Easy",
+  "companies": [
+    "Google",
+    "Amazon",
+    "Meta"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "একটি integer array এবং target দেওয়া আছে। এমন দুইটি আলাদা index ফেরত দাও যাদের মানের যোগফল target। প্রতিটি input-এ ঠিক একটি সমাধান আছে বলে ধরা যায়।",
+  "approach": "একটি hash map-এ আগে দেখা সংখ্যার index রাখো। বর্তমান x-এর জন্য target - x খুঁজে পেলে উত্তর পাওয়া যায়। প্রতিটি সংখ্যার জন্য পুরো array আবার খোঁজার দরকার হয় না।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)"
+  },
+  "edges": [
+    "দুইটি সংখ্যার মান একই হতে পারে, কিন্তু index আলাদা হতে হবে।",
+    "একই element-কে দুইবার ব্যবহার করা যাবে না।",
+    "উত্তর array-র যেকোনো ক্রমে ফেরত দেওয়া যায়।"
+  ],
+  "related": [
+    "valid-anagram",
+    "contains-duplicate"
+  ],
+  "front": "Target-এর complement আগে দেখা গেছে কি না যাচাই করে এক pass-এ pair বের করার উপায় কী?",
+  "back": "প্রতিটি x-এর জন্য target - x hash map-এ থাকলে pair পাওয়া যায়; না থাকলে x-এর index সংরক্ষণ করো।",
+  "summary": "একটি hash map-এ আগে দেখা সংখ্যার index রাখো। বর্তমান x-এর জন্য target - x খুঁজে পেলে উত্তর পাওয়া যায়। প্রতিটি সংখ্যার জন্য পুরো array আবার খোঁজার দরকার হয় না।",
+  "tags": [
+    "arrays",
+    "hashing",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "nums = [2, 7, 11, 15], target = 9",
+    "output": "[0, 1]"
+  },
+  "order": 1
+}
+---
+
+## Problem
+
+একটি integer array এবং target দেওয়া আছে। এমন দুইটি আলাদা index ফেরত দাও যাদের মানের যোগফল target। প্রতিটি input-এ ঠিক একটি সমাধান আছে বলে ধরা যায়।
+
+## Example
+
+**Input:** `nums = [2, 7, 11, 15], target = 9`
+
+**Output:** `[0, 1]`
+
+## Approach বাংলায়
+
+একটি hash map-এ আগে দেখা সংখ্যার index রাখো। বর্তমান x-এর জন্য target - x খুঁজে পেলে উত্তর পাওয়া যায়। প্রতিটি সংখ্যার জন্য পুরো array আবার খোঁজার দরকার হয় না।
+
+প্রতি সংখ্যাকে দেখার সময় কেবল আগে দেখা value-তে complement খোঁজা হয়। Current value আগে map-এ রাখলে একই index দুবার ব্যবহারের ঝুঁকি তৈরি হতো, তাই lookup আগে।
+
+## Python solution
+
+```python
+def two_sum(nums, target):
+    seen = {}
+    for i, value in enumerate(nums):
+        need = target - value
+        if need in seen:
+            return [seen[need], i]
+        seen[value] = i
+    return []
+```
+
+## JavaScript solution
+
+```javascript
+function twoSum(nums, target) {
+  const seen = new Map();
+  for (let i = 0; i < nums.length; i += 1) {
+    const need = target - nums[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(nums[i], i);
+  }
+  return [];
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- দুইটি সংখ্যার মান একই হতে পারে, কিন্তু index আলাদা হতে হবে।
+- একই element-কে দুইবার ব্যবহার করা যাবে না।
+- উত্তর array-র যেকোনো ক্রমে ফেরত দেওয়া যায়।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: valid-anagram, contains-duplicate।

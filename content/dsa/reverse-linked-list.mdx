@@ -1,0 +1,114 @@
+---
+{
+  "slug": "reverse-linked-list",
+  "title": "Reverse Linked List",
+  "category": "dsa",
+  "topic": "Linked List",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Microsoft",
+    "Apple"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "একটি singly linked list-এর head দেওয়া আছে। pointer-এর দিক উল্টে reversed list-এর head ফেরত দাও।",
+  "approach": "prev, current ও next pointer ব্যবহার করো। প্রতিটি iteration-এ next সংরক্ষণ করে current.next-কে prev করো, তারপর pointer তিনটি এগিয়ে নাও।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "খালি list হলে null/None ফেরত দাও।",
+    "এক node-এর list-এ সেই node-ই head থাকবে।",
+    "নতুন node বানানোর প্রয়োজন নেই।"
+  ],
+  "related": [
+    "merge-two-sorted-lists",
+    "linked-list-cycle"
+  ],
+  "front": "In-place linked-list reversal-এ কোন তিনটি pointer কাজে লাগে?",
+  "back": "prev আগের node, current বর্তমান node এবং next পরবর্তী node সংরক্ষণ করে; link উল্টানোর আগে next রেখে দিতে হয়।",
+  "summary": "prev, current ও next pointer ব্যবহার করো। প্রতিটি iteration-এ next সংরক্ষণ করে current.next-কে prev করো, তারপর pointer তিনটি এগিয়ে নাও।",
+  "tags": [
+    "linked",
+    "list",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "1 -> 2 -> 3 -> null",
+    "output": "3 -> 2 -> 1 -> null"
+  },
+  "order": 3
+}
+---
+
+## Problem
+
+একটি singly linked list-এর head দেওয়া আছে। pointer-এর দিক উল্টে reversed list-এর head ফেরত দাও।
+
+## Example
+
+**Input:** `1 -> 2 -> 3 -> null`
+
+**Output:** `3 -> 2 -> 1 -> null`
+
+## Approach বাংলায়
+
+prev, current ও next pointer ব্যবহার করো। প্রতিটি iteration-এ next সংরক্ষণ করে current.next-কে prev করো, তারপর pointer তিনটি এগিয়ে নাও।
+
+prev আগের node, current বর্তমান node এবং next পরবর্তী node সংরক্ষণ করে; link উল্টানোর আগে next রেখে দিতে হয়।
+
+## Python solution
+
+```python
+def reverse_list(head):
+    prev = None
+    current = head
+    while current:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    return prev
+```
+
+## JavaScript solution
+
+```javascript
+function reverseList(head) {
+  let previous = null;
+  let current = head;
+  while (current !== null) {
+    const nextNode = current.next;
+    current.next = previous;
+    previous = current;
+    current = nextNode;
+  }
+  return previous;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- খালি list হলে null/None ফেরত দাও।
+- এক node-এর list-এ সেই node-ই head থাকবে।
+- নতুন node বানানোর প্রয়োজন নেই।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: merge-two-sorted-lists, linked-list-cycle।

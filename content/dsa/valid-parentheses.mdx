@@ -1,0 +1,111 @@
+---
+{
+  "slug": "valid-parentheses",
+  "title": "Valid Parentheses",
+  "category": "dsa",
+  "topic": "Stack",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Bloomberg",
+    "Microsoft"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "বন্ধনীযুক্ত string-এ (), [], {} সঠিকভাবে nested ও matched কি না নির্ধারণ করো।",
+  "approach": "Opening bracket stack-এ রাখো। Closing bracket এলে stack ফাঁকা কি না এবং top-এর bracket matching কি না পরীক্ষা করো। শেষে stack খালি হলে string valid।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)"
+  },
+  "edges": [
+    "খালি string valid।",
+    "শুধু closing bracket থাকলে invalid।",
+    "ভিন্ন ধরনের bracket ভুলভাবে match হতে পারবে না।"
+  ],
+  "related": [
+    "implement-trie",
+    "reverse-linked-list"
+  ],
+  "front": "বন্ধনী যাচাইয়ে stack কেন উপযুক্ত?",
+  "back": "সর্বশেষ খোলা bracket-ই আগে বন্ধ হওয়া প্রয়োজন—এটি LIFO নিয়ম; stack সেটিই স্বাভাবিকভাবে প্রকাশ করে।",
+  "summary": "Opening bracket stack-এ রাখো। Closing bracket এলে stack ফাঁকা কি না এবং top-এর bracket matching কি না পরীক্ষা করো। শেষে stack খালি হলে string valid।",
+  "tags": [
+    "stack",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "s = \"{[]}\"",
+    "output": "true"
+  },
+  "order": 2
+}
+---
+
+## Problem
+
+বন্ধনীযুক্ত string-এ (), [], {} সঠিকভাবে nested ও matched কি না নির্ধারণ করো।
+
+## Example
+
+**Input:** `s = "{[]}"`
+
+**Output:** `true`
+
+## Approach বাংলায়
+
+Opening bracket stack-এ রাখো। Closing bracket এলে stack ফাঁকা কি না এবং top-এর bracket matching কি না পরীক্ষা করো। শেষে stack খালি হলে string valid।
+
+Stack-এর top-ই সর্বশেষ unmatched opening bracket। Closing bracket-এর type top-এর সঙ্গে না মিললে আর কোনো ভবিষ্যৎ character সেটি ঠিক করতে পারবে না, তাই সঙ্গে সঙ্গে false।
+
+## Python solution
+
+```python
+def is_valid(s):
+    pairs = {')': '(', ']': '[', '}': '{'}
+    stack = []
+    for char in s:
+        if char in '([{':
+            stack.append(char)
+        elif not stack or stack.pop() != pairs.get(char):
+            return False
+    return not stack
+```
+
+## JavaScript solution
+
+```javascript
+function isValid(s) {
+  const pairs = { ")": "(", "]": "[", "}": "{" };
+  const stack = [];
+  for (const char of s) {
+    if (char === "(" || char === "[" || char === "{") stack.push(char);
+    else if (stack.length === 0 || stack.pop() !== pairs[char]) return false;
+  }
+  return stack.length === 0;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- খালি string valid।
+- শুধু closing bracket থাকলে invalid।
+- ভিন্ন ধরনের bracket ভুলভাবে match হতে পারবে না।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: implement-trie, reverse-linked-list।

@@ -1,0 +1,12 @@
+{
+  "name": "InterviewPrep BD by RA Fahim",
+  "short_name": "InterviewPrep BD",
+  "description": "Free coding interview preparation in Bengali and English.",
+  "start_url": "/interview-prep/",
+  "scope": "/interview-prep/",
+  "display": "standalone",
+  "background_color": "#070a12",
+  "theme_color": "#070a12",
+  "lang": "bn",
+  "icons": [{ "src": "/interview-prep/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

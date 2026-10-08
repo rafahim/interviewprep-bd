@@ -1,0 +1,4 @@
+Contact: mailto:dev@rafahim.com
+Canonical: https://rafahim.com/interview-prep/.well-known/security.txt
+Preferred-Languages: bn, en
+Policy: https://rafahim.com/interview-prep/

@@ -1,0 +1,115 @@
+---
+{
+  "slug": "binary-search",
+  "title": "Binary Search",
+  "category": "dsa",
+  "topic": "Binary Search",
+  "difficulty": "Easy",
+  "companies": [
+    "Google",
+    "Amazon",
+    "Microsoft"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Ascending sorted array এবং target দেওয়া আছে। target-এর index বের করো; না থাকলে -1 ফেরত দাও।",
+  "approach": "low ও high দিয়ে search interval রাখো। মধ্যবর্তী value target-এর সমান হলে return; ছোট হলে low বাড়াও, বড় হলে high কমাও।",
+  "complexity": {
+    "time": "O(log n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "Array sorted হতে হবে।",
+    "Empty array হলে -1।",
+    "Mid হিসাবের overflow এড়াতে low + (high - low) // 2 প্যাটার্ন ব্যবহার করা যায়।"
+  ],
+  "related": [
+    "kth-largest-element"
+  ],
+  "front": "Binary search-এ sorted order কেন অপরিহার্য?",
+  "back": "মধ্যবর্তী value দেখে কোন অর্ধেকে target থাকতে পারে তা বাদ দিতে order-এর তথ্য ব্যবহার করা হয়। unsorted array-তে এই সিদ্ধান্ত নির্ভরযোগ্য নয়।",
+  "summary": "low ও high দিয়ে search interval রাখো। মধ্যবর্তী value target-এর সমান হলে return; ছোট হলে low বাড়াও, বড় হলে high কমাও।",
+  "tags": [
+    "binary",
+    "search",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "nums = [-1, 0, 3, 5, 9, 12], target = 9",
+    "output": "4"
+  },
+  "order": 6
+}
+---
+
+## Problem
+
+Ascending sorted array এবং target দেওয়া আছে। target-এর index বের করো; না থাকলে -1 ফেরত দাও।
+
+## Example
+
+**Input:** `nums = [-1, 0, 3, 5, 9, 12], target = 9`
+
+**Output:** `4`
+
+## Approach বাংলায়
+
+low ও high দিয়ে search interval রাখো। মধ্যবর্তী value target-এর সমান হলে return; ছোট হলে low বাড়াও, বড় হলে high কমাও।
+
+প্রতিটি comparison-এ অর্ধেক search interval বাদ যায়। Loop condition low <= high একটিমাত্র সম্ভাব্য index-ও পরীক্ষা করতে দেয়।
+
+## Python solution
+
+```python
+def binary_search(nums, target):
+    low, high = 0, len(nums) - 1
+    while low <= high:
+        mid = low + (high - low) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+```
+
+## JavaScript solution
+
+```javascript
+function binarySearch(nums, target) {
+  let low = 0;
+  let high = nums.length - 1;
+  while (low <= high) {
+    const mid = low + Math.floor((high - low) / 2);
+    if (nums[mid] === target) return mid;
+    if (nums[mid] < target) low = mid + 1;
+    else high = mid - 1;
+  }
+  return -1;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(log n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Array sorted হতে হবে।
+- Empty array হলে -1।
+- Mid হিসাবের overflow এড়াতে low + (high - low) // 2 প্যাটার্ন ব্যবহার করা যায়।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: kth-largest-element, search-in-rotated-array।

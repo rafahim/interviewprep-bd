@@ -1,0 +1,86 @@
+---
+{
+  "slug": "typescript-type-vs-interface",
+  "title": "TypeScript type vs Interface",
+  "category": "languages",
+  "topic": "TypeScript",
+  "difficulty": "Easy",
+  "companies": [
+    "Microsoft",
+    "Frontend Teams",
+    "Startups"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Type alias এবং interface কীভাবে object shape, union, extension ও declaration merging handle করে?",
+  "approach": "Interface object contract ও declaration merging-এর জন্য সুবিধাজনক; type alias union, intersection, primitive alias ও mapped type-এ flexible. অধিকাংশ object-shape use case-এ দুটোই উপযুক্ত; team convention consistency বেশি গুরুত্বপূর্ণ।",
+  "complexity": {
+    "time": "Compile-time only; no runtime performance impact",
+    "space": "Type checker metadata"
+  },
+  "edges": [
+    "type alias runtime validator তৈরি করে না।",
+    "Interface সব advanced type expression প্রকাশ করতে পারে না।",
+    "Public library API-তে declaration merging intentional কি না বিবেচনা করো।"
+  ],
+  "related": [
+    "javascript-event-loop",
+    "javascript-async"
+  ],
+  "front": "TypeScript type annotation কি runtime input validate করে?",
+  "back": "না। TypeScript compile-time type checking করে এবং type information সাধারণত emit-এর সময় মুছে যায়। External input-এর জন্য runtime schema validation প্রয়োজন।",
+  "summary": "Interface object contract ও declaration merging-এর জন্য সুবিধাজনক; type alias union, intersection, primitive alias ও mapped type-এ flexible. অধিকাংশ object-shape use case-এ দুটোই উপযুক্ত; team convention consistency বেশি",
+  "tags": [
+    "typescript",
+    "languages",
+    "easy"
+  ],
+  "examples": {
+    "input": "Type alias এবং interface কীভাবে object shape, union, extension ও declaration merging handle করে?",
+    "output": "না। TypeScript compile-time type checking করে এবং type information সাধারণত emit-এর সময় মুছে যায়। External input-এর জন্য runtime schema validation প্রয়োজন।"
+  },
+  "order": 49
+}
+---
+
+## Interview prompt
+
+Type alias এবং interface কীভাবে object shape, union, extension ও declaration merging handle করে?
+
+## Explanation বাংলায়
+
+Interface object contract ও declaration merging-এর জন্য সুবিধাজনক; type alias union, intersection, primitive alias ও mapped type-এ flexible. অধিকাংশ object-shape use case-এ দুটোই উপযুক্ত; team convention consistency বেশি গুরুত্বপূর্ণ।
+
+## Example
+
+```typescript
+type Result<T> = { data: T } | { error: string };
+
+interface User {
+  id: string;
+  displayName: string;
+}
+
+const result: Result<User> = { data: { id: "u1", displayName: "Fahim" } };
+```
+
+Union-এর জন্য type alias স্বাভাবিক; object contract-এর জন্য interface-ও উপযুক্ত। এই annotation runtime-এ untrusted JSON validate করে না।
+
+## Common mistakes
+
+- type alias runtime validator তৈরি করে না।
+- Interface সব advanced type expression প্রকাশ করতে পারে না।
+- Public library API-তে declaration merging intentional কি না বিবেচনা করো।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-event-loop, javascript-async

@@ -1,0 +1,110 @@
+---
+{
+  "slug": "best-time-to-buy-sell-stock",
+  "title": "Best Time to Buy and Sell Stock",
+  "category": "dsa",
+  "topic": "Arrays & Greedy",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Meta",
+    "Bloomberg"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "প্রতিদিনের stock price-এর array দেওয়া আছে। একবার buy এবং পরে একবার sell করে সর্বোচ্চ profit বের করো; profit না হলে 0।",
+  "approach": "বাম থেকে ডানে minimum price এখন পর্যন্ত ধরে রাখো। প্রতিদিনের price থেকে minimum বাদ দিয়ে best profit আপডেট করো, তারপর minimum-ও update করো।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "এক দিনের data-তে transaction সম্ভব নয়, তাই 0।",
+    "দাম শুধু কমলে উত্তর 0।",
+    "Buy অবশ্যই sell-এর আগে।"
+  ],
+  "related": [
+    "maximum-subarray",
+    "two-sum"
+  ],
+  "front": "Stock profit সমস্যায় কেন আগের সর্বনিম্ন দাম রাখা যথেষ্ট?",
+  "back": "প্রতিদিন sell করলে সম্ভাব্য সেরা buy হলো সেই দিনের আগে দেখা সর্বনিম্ন দাম। তাই সব buy-sell pair পরীক্ষা না করেও সেরা profit পাওয়া যায়।",
+  "summary": "বাম থেকে ডানে minimum price এখন পর্যন্ত ধরে রাখো। প্রতিদিনের price থেকে minimum বাদ দিয়ে best profit আপডেট করো, তারপর minimum-ও update করো।",
+  "tags": [
+    "arrays",
+    "greedy",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "prices = [7, 1, 5, 3, 6, 4]",
+    "output": "5, price 1-এ buy এবং 6-এ sell"
+  },
+  "order": 7
+}
+---
+
+## Problem
+
+প্রতিদিনের stock price-এর array দেওয়া আছে। একবার buy এবং পরে একবার sell করে সর্বোচ্চ profit বের করো; profit না হলে 0।
+
+## Example
+
+**Input:** `prices = [7, 1, 5, 3, 6, 4]`
+
+**Output:** `5, price 1-এ buy এবং 6-এ sell`
+
+## Approach বাংলায়
+
+বাম থেকে ডানে minimum price এখন পর্যন্ত ধরে রাখো। প্রতিদিনের price থেকে minimum বাদ দিয়ে best profit আপডেট করো, তারপর minimum-ও update করো।
+
+প্রতিটি sell day-তে আগের সবচেয়ে কম price-টি buy হিসেবে ব্যবহার করলে সেই day-র সর্বোচ্চ profit পাওয়া যায়। Global best শুধু বাড়াই।
+
+## Python solution
+
+```python
+def max_profit(prices):
+    minimum = float('inf')
+    best = 0
+    for price in prices:
+        minimum = min(minimum, price)
+        best = max(best, price - minimum)
+    return best
+```
+
+## JavaScript solution
+
+```javascript
+function maxProfit(prices) {
+  let minimum = Infinity;
+  let best = 0;
+  for (const price of prices) {
+    minimum = Math.min(minimum, price);
+    best = Math.max(best, price - minimum);
+  }
+  return best;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- এক দিনের data-তে transaction সম্ভব নয়, তাই 0।
+- দাম শুধু কমলে উত্তর 0।
+- Buy অবশ্যই sell-এর আগে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: maximum-subarray, two-sum।

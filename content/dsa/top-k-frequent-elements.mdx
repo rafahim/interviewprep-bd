@@ -1,0 +1,122 @@
+---
+{
+  "slug": "top-k-frequent-elements",
+  "title": "Top K Frequent Elements",
+  "category": "dsa",
+  "topic": "Hash Map & Heap",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Meta"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Integer array এবং k দেওয়া আছে। frequency সবচেয়ে বেশি এমন kটি value ফেরত দাও।",
+  "approach": "Frequency map তৈরি করো। তারপর bucket sort-এ frequency অনুযায়ী value রাখো এবং highest frequency থেকে kটি value সংগ্রহ করো।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)"
+  },
+  "edges": [
+    "সমাধান ধরে নেওয়া হয় k valid।",
+    "একই frequency-তে যেকোনো order গ্রহণযোগ্য যদি problem তা না নির্ধারণ করে।",
+    "Negative value-ও key হতে পারে।"
+  ],
+  "related": [
+    "group-anagrams",
+    "contains-duplicate"
+  ],
+  "front": "Bucket sort এই সমস্যায় কীভাবে O(n) average time দেয়?",
+  "back": "কোনো frequency n-এর বেশি হতে পারে না। frequency-কে index ধরে bucket বানালে comparison-based sort ছাড়াই n থেকে 1 পর্যন্ত bucket scan করা যায়।",
+  "summary": "Frequency map তৈরি করো। তারপর bucket sort-এ frequency অনুযায়ী value রাখো এবং highest frequency থেকে kটি value সংগ্রহ করো।",
+  "tags": [
+    "hash",
+    "map",
+    "heap",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "nums = [1, 1, 1, 2, 2, 3], k = 2",
+    "output": "[1, 2]"
+  },
+  "order": 13
+}
+---
+
+## Problem
+
+Integer array এবং k দেওয়া আছে। frequency সবচেয়ে বেশি এমন kটি value ফেরত দাও।
+
+## Example
+
+**Input:** `nums = [1, 1, 1, 2, 2, 3], k = 2`
+
+**Output:** `[1, 2]`
+
+## Approach বাংলায়
+
+Frequency map তৈরি করো। তারপর bucket sort-এ frequency অনুযায়ী value রাখো এবং highest frequency থেকে kটি value সংগ্রহ করো।
+
+Frequency অনুযায়ী bucket বানালে frequency sort করতে হয় না। সবচেয়ে বেশি count থেকে bucket scan করে kটি distinct value সংগ্রহ করি।
+
+## Python solution
+
+```python
+def top_k_frequent(nums, k):
+    from collections import Counter
+    counts = Counter(nums)
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for value, count in counts.items():
+        buckets[count].append(value)
+    result = []
+    for count in range(len(buckets) - 1, 0, -1):
+        for value in buckets[count]:
+            result.append(value)
+            if len(result) == k:
+                return result
+    return result
+```
+
+## JavaScript solution
+
+```javascript
+function topKFrequent(nums, k) {
+  const counts = new Map();
+  for (const value of nums) counts.set(value, (counts.get(value) || 0) + 1);
+  const buckets = Array.from({ length: nums.length + 1 }, () => []);
+  for (const [value, count] of counts) buckets[count].push(value);
+  const result = [];
+  for (let count = buckets.length - 1; count > 0; count -= 1) {
+    for (const value of buckets[count]) {
+      result.push(value);
+      if (result.length === k) return result;
+    }
+  }
+  return result;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- সমাধান ধরে নেওয়া হয় k valid।
+- একই frequency-তে যেকোনো order গ্রহণযোগ্য যদি problem তা না নির্ধারণ করে।
+- Negative value-ও key হতে পারে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: group-anagrams, contains-duplicate।

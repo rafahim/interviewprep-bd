@@ -1,0 +1,89 @@
+---
+{
+  "slug": "javascript-closures",
+  "title": "JavaScript Closures",
+  "category": "languages",
+  "topic": "JavaScript",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Meta",
+    "Frontend Teams"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Closure কী এবং loop, callback বা private state-এ এটি কীভাবে কাজে লাগে বোঝাও।",
+  "approach": "Inner function lexical environment থেকে বাইরের variable access করতে পারে, outer function return হওয়ার পরেও। এটি callback ও factory-তে useful, কিন্তু বড় captured object ধরে রাখলে memory lifetime দীর্ঘ হতে পারে।",
+  "complexity": {
+    "time": "Function call cost plus captured-variable access",
+    "space": "Captured lexical environment"
+  },
+  "edges": [
+    "Closure value-এর snapshot নয়; variable binding access করে।",
+    "var loop capture-এর classic problem let দিয়ে সমাধান করা যায়।",
+    "Unintended retention memory leak-এর মতো symptom দিতে পারে।"
+  ],
+  "related": [
+    "javascript-event-loop",
+    "javascript-async"
+  ],
+  "front": "Closure-এ variable-এর snapshot থাকে নাকি binding?",
+  "back": "সাধারণ closure lexical binding-এর reference ব্যবহার করে; function call-এর সময় সেই binding-এর বর্তমান value পড়তে পারে।",
+  "summary": "Inner function lexical environment থেকে বাইরের variable access করতে পারে, outer function return হওয়ার পরেও। এটি callback ও factory-তে useful, কিন্তু বড় captured object ধরে রাখলে memory lifetime দীর্ঘ হতে পারে।",
+  "tags": [
+    "javascript",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "Closure কী এবং loop, callback বা private state-এ এটি কীভাবে কাজে লাগে বোঝাও।",
+    "output": "সাধারণ closure lexical binding-এর reference ব্যবহার করে; function call-এর সময় সেই binding-এর বর্তমান value পড়তে পারে।"
+  },
+  "order": 48
+}
+---
+
+## Interview prompt
+
+Closure কী এবং loop, callback বা private state-এ এটি কীভাবে কাজে লাগে বোঝাও।
+
+## Explanation বাংলায়
+
+Inner function lexical environment থেকে বাইরের variable access করতে পারে, outer function return হওয়ার পরেও। এটি callback ও factory-তে useful, কিন্তু বড় captured object ধরে রাখলে memory lifetime দীর্ঘ হতে পারে।
+
+## Example
+
+```javascript
+function makeCounter() {
+  let count = 0;
+  return function increment() {
+    count += 1;
+    return count;
+  };
+}
+
+const counter = makeCounter();
+console.log(counter());
+console.log(counter());
+```
+
+Returned function `count` binding ধরে রাখে; outer call শেষ হলেও পরবর্তী call-এ আগের state থাকে।
+
+## Common mistakes
+
+- Closure value-এর snapshot নয়; variable binding access করে।
+- var loop capture-এর classic problem let দিয়ে সমাধান করা যায়।
+- Unintended retention memory leak-এর মতো symptom দিতে পারে।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-event-loop, javascript-async

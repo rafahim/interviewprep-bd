@@ -1,0 +1,111 @@
+---
+{
+  "slug": "coin-change",
+  "title": "Coin Change",
+  "category": "dsa",
+  "topic": "Dynamic Programming",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Microsoft"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Coin denomination array এবং amount দেওয়া আছে। amount তৈরি করতে minimum কয়টি coin লাগে? সম্ভব না হলে -1 ফেরত দাও; coin-এর supply অসীম।",
+  "approach": "dp[a] হলো amount a তৈরির minimum coin সংখ্যা। প্রতিটি coin c-এর জন্য a >= c হলে dp[a] = min(dp[a], dp[a-c] + 1)।",
+  "complexity": {
+    "time": "O(amount × number of coins)",
+    "space": "O(amount)"
+  },
+  "edges": [
+    "Amount 0 হলে উত্তর 0।",
+    "Positive coin denomination ধরে নেওয়া হয়েছে।",
+    "কোনো combination না থাকলে sentinel value থেকে -1 ফেরত দিতে হবে।"
+  ],
+  "related": [
+    "maximum-subarray"
+  ],
+  "front": "Coin Change DP-তে amount ascending order-এ কেন iterate করা যায়?",
+  "back": "Unlimited coin ব্যবহার করা যায়, তাই একই coin-এর আগের ছোট amount-এর state থেকে আবার ওই coin ব্যবহার করে বড় amount তৈরি করা অনুমোদিত।",
+  "summary": "dp[a] হলো amount a তৈরির minimum coin সংখ্যা। প্রতিটি coin c-এর জন্য a >= c হলে dp[a] = min(dp[a], dp[a-c] + 1)।",
+  "tags": [
+    "dynamic",
+    "programming",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "coins = [1, 2, 5], amount = 11",
+    "output": "3, কারণ 5 + 5 + 1"
+  },
+  "order": 15
+}
+---
+
+## Problem
+
+Coin denomination array এবং amount দেওয়া আছে। amount তৈরি করতে minimum কয়টি coin লাগে? সম্ভব না হলে -1 ফেরত দাও; coin-এর supply অসীম।
+
+## Example
+
+**Input:** `coins = [1, 2, 5], amount = 11`
+
+**Output:** `3, কারণ 5 + 5 + 1`
+
+## Approach বাংলায়
+
+dp[a] হলো amount a তৈরির minimum coin সংখ্যা। প্রতিটি coin c-এর জন্য a >= c হলে dp[a] = min(dp[a], dp[a-c] + 1)।
+
+DP-তে amount a-এর উত্তর ছোট amount a-coin-এর উত্তর থেকে পাওয়া যায়। Impossible amount sentinel value-তে থাকে এবং শেষে -1-এ map হয়।
+
+## Python solution
+
+```python
+def coin_change(coins, amount):
+    dp = [amount + 1] * (amount + 1)
+    dp[0] = 0
+    for value in range(1, amount + 1):
+        for coin in coins:
+            if coin <= value:
+                dp[value] = min(dp[value], dp[value - coin] + 1)
+    return dp[amount] if dp[amount] <= amount else -1
+```
+
+## JavaScript solution
+
+```javascript
+function coinChange(coins, amount) {
+  const dp = new Array(amount + 1).fill(amount + 1);
+  dp[0] = 0;
+  for (let value = 1; value <= amount; value += 1) {
+    for (const coin of coins) {
+      if (coin <= value) dp[value] = Math.min(dp[value], dp[value - coin] + 1);
+    }
+  }
+  return dp[amount] <= amount ? dp[amount] : -1;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(amount × number of coins) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(amount) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Amount 0 হলে উত্তর 0।
+- Positive coin denomination ধরে নেওয়া হয়েছে।
+- কোনো combination না থাকলে sentinel value থেকে -1 ফেরত দিতে হবে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: maximum-subarray, climb-stairs।

@@ -1,0 +1,76 @@
+---
+{
+  "slug": "sql-joins",
+  "title": "SQL JOINs Explained",
+  "category": "database",
+  "topic": "SQL",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Daraz",
+    "Pathao"
+  ],
+  "languages": [
+    "SQL",
+    "PostgreSQL"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "INNER, LEFT, RIGHT এবং FULL OUTER JOIN-এর পার্থক্য উদাহরণসহ ব্যাখ্যা করো।",
+  "approach": "INNER কেবল match; LEFT বাম table-এর সব row ও match থাকলে ডানদিকের data; RIGHT এর বিপরীত; FULL দুই পাশের unmatched row-ও রাখে। JOIN key-তে NULL ও duplicate থাকলে result cardinality বুঝতে হবে।",
+  "complexity": {
+    "time": "Output size depends on matched rows; proper indexes reduce lookup cost",
+    "space": "Joined rows and execution plan"
+  },
+  "edges": [
+    "One-to-many join row count বাড়ায়।",
+    "NULL equality comparison true হয় না; IS NULL ব্যবহার করো।",
+    "Duplicate key unexpected duplication তৈরি করতে পারে।"
+  ],
+  "related": [
+    "database-indexes",
+    "database-normalization"
+  ],
+  "front": "LEFT JOIN-এর right-side filter WHERE-এ দিলে LEFT JOIN কখন INNER JOIN-এর মতো আচরণ করতে পারে?",
+  "back": "যদি WHERE clause right table-এর non-null field বাধ্যতামূলক করে, unmatched row-তে NULL হওয়ায় সেগুলো বাদ যায়। Outer-join filtering intent অনুযায়ী condition ON-এ রাখা লাগতে পারে.",
+  "summary": "INNER কেবল match; LEFT বাম table-এর সব row ও match থাকলে ডানদিকের data; RIGHT এর বিপরীত; FULL দুই পাশের unmatched row-ও রাখে। JOIN key-তে NULL ও duplicate থাকলে result cardinality বুঝতে হবে।",
+  "tags": [
+    "sql",
+    "database",
+    "easy"
+  ],
+  "examples": {
+    "input": "INNER, LEFT, RIGHT এবং FULL OUTER JOIN-এর পার্থক্য উদাহরণসহ ব্যাখ্যা করো।",
+    "output": "যদি WHERE clause right table-এর non-null field বাধ্যতামূলক করে, unmatched row-তে NULL হওয়ায় সেগুলো বাদ যায়। Outer-join filtering intent অনুযায়ী condition ON-এ রাখা লাগতে পারে."
+  },
+  "order": 33
+}
+---
+
+## Core concept
+
+INNER, LEFT, RIGHT এবং FULL OUTER JOIN-এর পার্থক্য উদাহরণসহ ব্যাখ্যা করো।
+
+## Explanation বাংলায়
+
+INNER কেবল match; LEFT বাম table-এর সব row ও match থাকলে ডানদিকের data; RIGHT এর বিপরীত; FULL দুই পাশের unmatched row-ও রাখে। JOIN key-তে NULL ও duplicate থাকলে result cardinality বুঝতে হবে।
+
+## Practical example
+
+`customers` থেকে সব customer এবং থাকলে তাদের order দেখাতে `LEFT JOIN orders ON orders.customer_id = customers.id` ব্যবহার করা যায়। Order না থাকলে order columns NULL হবে; WHERE clause-এ সেগুলো mandatory করলে unmatched customer বাদ পড়ে যেতে পারে।
+
+## কীভাবে verify করবে
+
+একটি ছোট reproducible dataset দিয়ে expected output পরীক্ষা করো। Database-এ `EXPLAIN`/`EXPLAIN ANALYZE` বা সমতুল্য query plan দেখো, কিন্তু production data-তে expensive analysis চালানোর আগে impact বুঝে নাও। Performance-এর সিদ্ধান্ত শুধু table row count দিয়ে নয়, selectivity, access pattern, transaction contention এবং write volume দেখে নেওয়া উচিত।
+
+## Trade-offs and edge cases
+
+- One-to-many join row count বাড়ায়।
+- NULL equality comparison true হয় না; IS NULL ব্যবহার করো।
+- Duplicate key unexpected duplication তৈরি করতে পারে।
+
+Interview-তে কোনো feature-এর নাম বলার পাশাপাশি failure mode ব্যাখ্যা করো: NULL কী করে, duplicate key থাকলে কী হয়, concurrent transaction কীভাবে interact করে এবং retry safe কি না।
+
+## Related concepts
+
+database-indexes, database-normalization — এগুলো একসঙ্গে পড়লে indexing, data model এবং correctness-এর সম্পর্ক স্পষ্ট হবে।

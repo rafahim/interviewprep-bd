@@ -1,0 +1,77 @@
+---
+{
+  "slug": "database-indexes",
+  "title": "Database Indexes: What, Why, and When?",
+  "category": "database",
+  "topic": "Database Internals",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Daraz"
+  ],
+  "languages": [
+    "SQL",
+    "PostgreSQL"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Database index কীভাবে query দ্রুত করে, এবং index-এর cost কী?",
+  "approach": "সাধারণ B-tree index sorted key ও row reference রাখে, তাই equality/range filter-এ পুরো table scan এড়ানো যায়। কিন্তু insert/update/delete-এ index maintain করতে হয়; অতিরিক্ত index storage ও write latency বাড়ায়।",
+  "complexity": {
+    "time": "Index seek সাধারণত O(log n), তারপর matching row access",
+    "space": "Index pages, table rows"
+  },
+  "edges": [
+    "Low-selectivity column-এ index সবসময় লাভ দেয় না।",
+    "Composite index-এর column order গুরুত্বপূর্ণ।",
+    "Query planner-এর execution plan দেখে যাচাই করা দরকার।"
+  ],
+  "related": [
+    "acid-transactions",
+    "sql-joins"
+  ],
+  "front": "Write-heavy table-এ খুব বেশি index কেন ক্ষতিকর?",
+  "back": "প্রতিটি write-এ সংশ্লিষ্ট index update হয়, ফলে disk I/O, storage ও transaction work বাড়ে। বাস্তব query plan-এ ব্যবহৃত index-ই রাখা ভালো.",
+  "summary": "সাধারণ B-tree index sorted key ও row reference রাখে, তাই equality/range filter-এ পুরো table scan এড়ানো যায়। কিন্তু insert/update/delete-এ index maintain করতে হয়; অতিরিক্ত index storage ও write latency বাড়ায়।",
+  "tags": [
+    "database",
+    "internals",
+    "database",
+    "medium"
+  ],
+  "examples": {
+    "input": "Database index কীভাবে query দ্রুত করে, এবং index-এর cost কী?",
+    "output": "প্রতিটি write-এ সংশ্লিষ্ট index update হয়, ফলে disk I/O, storage ও transaction work বাড়ে। বাস্তব query plan-এ ব্যবহৃত index-ই রাখা ভালো."
+  },
+  "order": 31
+}
+---
+
+## Core concept
+
+Database index কীভাবে query দ্রুত করে, এবং index-এর cost কী?
+
+## Explanation বাংলায়
+
+সাধারণ B-tree index sorted key ও row reference রাখে, তাই equality/range filter-এ পুরো table scan এড়ানো যায়। কিন্তু insert/update/delete-এ index maintain করতে হয়; অতিরিক্ত index storage ও write latency বাড়ায়।
+
+## Practical example
+
+ধরা যাক `orders` table-এ customer-এর recent order খুঁজতে `WHERE customer_id = ? ORDER BY created_at DESC LIMIT 20` query চলে। `(customer_id, created_at)` composite index এই query-র access path-এ সাহায্য করতে পারে; final decision execution plan এবং real data distribution দেখে নাও।
+
+## কীভাবে verify করবে
+
+একটি ছোট reproducible dataset দিয়ে expected output পরীক্ষা করো। Database-এ `EXPLAIN`/`EXPLAIN ANALYZE` বা সমতুল্য query plan দেখো, কিন্তু production data-তে expensive analysis চালানোর আগে impact বুঝে নাও। Performance-এর সিদ্ধান্ত শুধু table row count দিয়ে নয়, selectivity, access pattern, transaction contention এবং write volume দেখে নেওয়া উচিত।
+
+## Trade-offs and edge cases
+
+- Low-selectivity column-এ index সবসময় লাভ দেয় না।
+- Composite index-এর column order গুরুত্বপূর্ণ।
+- Query planner-এর execution plan দেখে যাচাই করা দরকার।
+
+Interview-তে কোনো feature-এর নাম বলার পাশাপাশি failure mode ব্যাখ্যা করো: NULL কী করে, duplicate key থাকলে কী হয়, concurrent transaction কীভাবে interact করে এবং retry safe কি না।
+
+## Related concepts
+
+acid-transactions, sql-joins — এগুলো একসঙ্গে পড়লে indexing, data model এবং correctness-এর সম্পর্ক স্পষ্ট হবে।

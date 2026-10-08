@@ -1,0 +1,111 @@
+---
+{
+  "slug": "group-anagrams",
+  "title": "Group Anagrams",
+  "category": "dsa",
+  "topic": "Arrays & Hashing",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Meta",
+    "Google"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "String-এর list-কে এমন group-এ ভাগ করো যেখানে প্রতিটি group-এর string-গুলো anagram।",
+  "approach": "প্রতিটি string-এর character frequency tuple-কে canonical key হিসেবে ব্যবহার করো। একই key-র string একই group-এ যাবে।",
+  "complexity": {
+    "time": "O(n · k log k)",
+    "space": "O(n · k)"
+  },
+  "edges": [
+    "Empty string-গুলোর key একই হবে।",
+    "Input-এ duplicate word থাকলে উভয় occurrence রাখতে হবে।",
+    "Unicode হলে fixed 26-counter key কেবল lowercase English-এর জন্য উপযুক্ত।"
+  ],
+  "related": [
+    "valid-anagram",
+    "top-k-frequent-elements"
+  ],
+  "front": "Group Anagrams-এ canonical key-এর কাজ কী?",
+  "back": "Anagram-গুলোর character frequency একই থাকে, তাই frequency tuple একটি stable key; একই key পাওয়া string এক group-এ রাখা যায়।",
+  "summary": "প্রতিটি string-এর character frequency tuple-কে canonical key হিসেবে ব্যবহার করো। একই key-র string একই group-এ যাবে।",
+  "tags": [
+    "arrays",
+    "hashing",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "[\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"]",
+    "output": "[[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]"
+  },
+  "order": 10
+}
+---
+
+## Problem
+
+String-এর list-কে এমন group-এ ভাগ করো যেখানে প্রতিটি group-এর string-গুলো anagram।
+
+## Example
+
+**Input:** `["eat", "tea", "tan", "ate", "nat", "bat"]`
+
+**Output:** `[["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]`
+
+## Approach বাংলায়
+
+প্রতিটি string-এর character frequency tuple-কে canonical key হিসেবে ব্যবহার করো। একই key-র string একই group-এ যাবে।
+
+একই character-গুলো ভিন্ন order-এ থাকলেও sorted canonical key একই হয়। Key একই হলে string-গুলো একই group-এ যায়।
+
+## Python solution
+
+```python
+from collections import defaultdict, Counter
+
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for word in strs:
+        key = tuple(sorted(Counter(word).items()))
+        groups[key].append(word)
+    return list(groups.values())
+```
+
+## JavaScript solution
+
+```javascript
+function groupAnagrams(strs) {
+  const groups = new Map();
+  for (const word of strs) {
+    const key = Array.from(word).sort().join("");
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(word);
+  }
+  return Array.from(groups.values());
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n · k log k) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n · k) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Empty string-গুলোর key একই হবে।
+- Input-এ duplicate word থাকলে উভয় occurrence রাখতে হবে।
+- Unicode হলে fixed 26-counter key কেবল lowercase English-এর জন্য উপযুক্ত।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: valid-anagram, top-k-frequent-elements।

@@ -1,0 +1,116 @@
+---
+{
+  "slug": "merge-intervals",
+  "title": "Merge Intervals",
+  "category": "dsa",
+  "topic": "Intervals & Sorting",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Amazon",
+    "Bloomberg"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "[start, end] interval-এর list-কে overlapping interval merge করে ফেরত দাও।",
+  "approach": "Start অনুযায়ী sort করো। নতুন interval-এর start বর্তমান merged interval-এর end-এর মধ্যে পড়লে end বাড়াও; overlap না থাকলে নতুন interval শুরু করো।",
+  "complexity": {
+    "time": "O(n log n)",
+    "space": "O(n)"
+  },
+  "edges": [
+    "খালি list-এ খালি ফল।",
+    "একই endpoint-এ স্পর্শ করা interval overlap কি না problem statement দেখে নির্ধারণ করতে হবে; এখানে inclusive endpoint ধরা হয়েছে।",
+    "Input order sorted নাও হতে পারে।"
+  ],
+  "related": [
+    "binary-search",
+    "maximum-subarray"
+  ],
+  "front": "Interval merge-এর আগে sort কেন করা হয়?",
+  "back": "Start অনুযায়ী সাজালে সম্ভাব্য overlap শুধু আগের merged interval-এর সঙ্গে পরীক্ষা করলেই হয়; অন্যথায় অনেক pair তুলনা করতে হতে পারে।",
+  "summary": "Start অনুযায়ী sort করো। নতুন interval-এর start বর্তমান merged interval-এর end-এর মধ্যে পড়লে end বাড়াও; overlap না থাকলে নতুন interval শুরু করো।",
+  "tags": [
+    "intervals",
+    "sorting",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+    "output": "[[1,6],[8,10],[15,18]]"
+  },
+  "order": 17
+}
+---
+
+## Problem
+
+[start, end] interval-এর list-কে overlapping interval merge করে ফেরত দাও।
+
+## Example
+
+**Input:** `intervals = [[1,3],[2,6],[8,10],[15,18]]`
+
+**Output:** `[[1,6],[8,10],[15,18]]`
+
+## Approach বাংলায়
+
+Start অনুযায়ী sort করো। নতুন interval-এর start বর্তমান merged interval-এর end-এর মধ্যে পড়লে end বাড়াও; overlap না থাকলে নতুন interval শুরু করো।
+
+Sort করার পর সব সম্ভাব্য overlap বর্তমান last interval-এর সঙ্গে তুলনা করলেই বোঝা যায়। End point-এর maximum নিয়ে merged range বাড়াই।
+
+## Python solution
+
+```python
+def merge_intervals(intervals):
+    if not intervals:
+        return []
+    intervals = sorted(intervals, key=lambda item: item[0])
+    merged = [intervals[0][:]]
+    for start, end in intervals[1:]:
+        if start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged
+```
+
+## JavaScript solution
+
+```javascript
+function mergeIntervals(intervals) {
+  if (intervals.length === 0) return [];
+  const sorted = intervals.map(([start, end]) => [start, end]).sort((a, b) => a[0] - b[0]);
+  const merged = [sorted[0]];
+  for (const [start, end] of sorted.slice(1)) {
+    const last = merged[merged.length - 1];
+    if (start <= last[1]) last[1] = Math.max(last[1], end);
+    else merged.push([start, end]);
+  }
+  return merged;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n log n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- খালি list-এ খালি ফল।
+- একই endpoint-এ স্পর্শ করা interval overlap কি না problem statement দেখে নির্ধারণ করতে হবে; এখানে inclusive endpoint ধরা হয়েছে।
+- Input order sorted নাও হতে পারে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: binary-search, maximum-subarray।

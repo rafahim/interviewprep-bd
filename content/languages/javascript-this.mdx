@@ -1,0 +1,88 @@
+---
+{
+  "slug": "javascript-this",
+  "title": "How Does `this` Work in JavaScript?",
+  "category": "languages",
+  "topic": "JavaScript",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Meta",
+    "Frontend Teams"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Regular function এবং arrow function-এ `this` কীভাবে নির্ধারিত হয়?",
+  "approach": "Regular function call-site অনুযায়ী this পায়—method call, explicit bind/call/apply, constructor বা strict-mode standalone call। Arrow function নিজস্ব this bind করে না; lexical surrounding scope থেকে নেয়।",
+  "complexity": {
+    "time": "No special algorithmic complexity",
+    "space": "Execution context binding"
+  },
+  "edges": [
+    "Function কোথায় লেখা হয়েছে তা সবসময় regular function-এর this নির্ধারণ করে না।",
+    "Arrow function method হিসেবে সাধারণত উপযুক্ত নয় যদি dynamic this দরকার হয়।",
+    "Class method callback-এ binding খেয়াল করতে হবে।"
+  ],
+  "related": [
+    "javascript-closures",
+    "javascript-event-loop"
+  ],
+  "front": "Arrow function-এর `this` কেন surrounding object-এর dynamic receiver নয়?",
+  "back": "Arrow function নিজস্ব this binding তৈরি করে না; definition-এর lexical environment থেকে this নেয়। তাই call-site বদলালেও সেটি rebind হয় না।",
+  "summary": "Regular function call-site অনুযায়ী this পায়—method call, explicit bind/call/apply, constructor বা strict-mode standalone call। Arrow function নিজস্ব this bind করে না; lexical surrounding scope থেকে নেয়।",
+  "tags": [
+    "javascript",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "Regular function এবং arrow function-এ `this` কীভাবে নির্ধারিত হয়?",
+    "output": "Arrow function নিজস্ব this binding তৈরি করে না; definition-এর lexical environment থেকে this নেয়। তাই call-site বদলালেও সেটি rebind হয় না।"
+  },
+  "order": 53
+}
+---
+
+## Interview prompt
+
+Regular function এবং arrow function-এ `this` কীভাবে নির্ধারিত হয়?
+
+## Explanation বাংলায়
+
+Regular function call-site অনুযায়ী this পায়—method call, explicit bind/call/apply, constructor বা strict-mode standalone call। Arrow function নিজস্ব this bind করে না; lexical surrounding scope থেকে নেয়।
+
+## Example
+
+```javascript
+const user = {
+  name: "Fahim",
+  showName() {
+    return this.name;
+  }
+};
+
+const show = user.showName;
+console.log(user.showName());
+console.log(show());
+```
+
+প্রথম call-এ receiver `user`; detached regular function-এ strict mode-এ `this` undefined হতে পারে। Callback হিসেবে ব্যবহার করতে চাইলে bind বা arrow closure context বুঝে বেছে নাও।
+
+## Common mistakes
+
+- Function কোথায় লেখা হয়েছে তা সবসময় regular function-এর this নির্ধারণ করে না।
+- Arrow function method হিসেবে সাধারণত উপযুক্ত নয় যদি dynamic this দরকার হয়।
+- Class method callback-এ binding খেয়াল করতে হবে।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-closures, javascript-event-loop

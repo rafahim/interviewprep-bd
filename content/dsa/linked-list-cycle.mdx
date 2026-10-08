@@ -1,0 +1,114 @@
+---
+{
+  "slug": "linked-list-cycle",
+  "title": "Linked List Cycle",
+  "category": "dsa",
+  "topic": "Linked List & Two Pointers",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Microsoft",
+    "Google"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Linked list-এর head দেওয়া আছে। কোনো node-এ আবার ফিরে আসা pointer cycle তৈরি করলে true ফেরত দাও।",
+  "approach": "Floyd’s tortoise-and-hare পদ্ধতিতে slow এক step, fast দুই step চলে। cycle থাকলে তারা মিলবে; fast null হলে cycle নেই।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "খালি list বা এক node-এর null next হলে cycle নেই।",
+    "Node value নয়, pointer identity তুলনা করতে হবে।",
+    "Fast pointer-এর next dereference করার আগে null check প্রয়োজন।"
+  ],
+  "related": [
+    "reverse-linked-list",
+    "merge-two-sorted-lists"
+  ],
+  "front": "Floyd algorithm cycle থাকলে কেন pointer-দুটি মিলবেই?",
+  "back": "Cycle-এর মধ্যে fast pointer প্রতি iteration-এ slow-এর তুলনায় এক node করে দূরত্ব কমায়; finite cycle-এ এই modular distance একসময় শূন্য হয়।",
+  "summary": "Floyd’s tortoise-and-hare পদ্ধতিতে slow এক step, fast দুই step চলে। cycle থাকলে তারা মিলবে; fast null হলে cycle নেই।",
+  "tags": [
+    "linked",
+    "list",
+    "two",
+    "pointers",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "3 -> 2 -> 0 -> -4, শেষ node-এর next দ্বিতীয় node-কে point করে",
+    "output": "true"
+  },
+  "order": 18
+}
+---
+
+## Problem
+
+Linked list-এর head দেওয়া আছে। কোনো node-এ আবার ফিরে আসা pointer cycle তৈরি করলে true ফেরত দাও।
+
+## Example
+
+**Input:** `3 -> 2 -> 0 -> -4, শেষ node-এর next দ্বিতীয় node-কে point করে`
+
+**Output:** `true`
+
+## Approach বাংলায়
+
+Floyd’s tortoise-and-hare পদ্ধতিতে slow এক step, fast দুই step চলে। cycle থাকলে তারা মিলবে; fast null হলে cycle নেই।
+
+Fast pointer দুই step, slow এক step চলে। Cycle না থাকলে fast null-এ পৌঁছায়; cycle থাকলে relative distance একসময় শূন্য হয়।
+
+## Python solution
+
+```python
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:
+            return True
+    return False
+```
+
+## JavaScript solution
+
+```javascript
+function hasCycle(head) {
+  let slow = head;
+  let fast = head;
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- খালি list বা এক node-এর null next হলে cycle নেই।
+- Node value নয়, pointer identity তুলনা করতে হবে।
+- Fast pointer-এর next dereference করার আগে null check প্রয়োজন।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: reverse-linked-list, merge-two-sorted-lists।

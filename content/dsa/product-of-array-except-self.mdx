@@ -1,0 +1,120 @@
+---
+{
+  "slug": "product-of-array-except-self",
+  "title": "Product of Array Except Self",
+  "category": "dsa",
+  "topic": "Arrays & Prefix Sum",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Microsoft",
+    "Apple"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "প্রতিটি index i-এর জন্য নিজের element বাদে বাকি সব element-এর product ফেরত দাও; division ব্যবহার করা যাবে না।",
+  "approach": "প্রথম pass-এ প্রতিটি অবস্থানে left-side product রাখো। দ্বিতীয় pass-এ ডানদিকের running product গুণ করে final result তৈরি করো।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1) extra, output বাদে"
+  },
+  "edges": [
+    "একটি zero থাকলে zero বাদে একটি অবস্থানে nonzero product থাকতে পারে।",
+    "দুই বা তার বেশি zero থাকলে সব ফল zero।",
+    "Division ব্যবহার নয়।"
+  ],
+  "related": [
+    "maximum-subarray",
+    "two-sum"
+  ],
+  "front": "Prefix ও suffix product একত্র করলে division লাগে না কেন?",
+  "back": "প্রতিটি position-এর উত্তর হলো বাম পাশের product × ডান পাশের product। দুই pass-এ এই অংশগুলো জমা করলেই zero-র ক্ষেত্রও স্বাভাবিকভাবে কাজ করে।",
+  "summary": "প্রথম pass-এ প্রতিটি অবস্থানে left-side product রাখো। দ্বিতীয় pass-এ ডানদিকের running product গুণ করে final result তৈরি করো।",
+  "tags": [
+    "arrays",
+    "prefix",
+    "sum",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "nums = [1, 2, 3, 4]",
+    "output": "[24, 12, 8, 6]"
+  },
+  "order": 12
+}
+---
+
+## Problem
+
+প্রতিটি index i-এর জন্য নিজের element বাদে বাকি সব element-এর product ফেরত দাও; division ব্যবহার করা যাবে না।
+
+## Example
+
+**Input:** `nums = [1, 2, 3, 4]`
+
+**Output:** `[24, 12, 8, 6]`
+
+## Approach বাংলায়
+
+প্রথম pass-এ প্রতিটি অবস্থানে left-side product রাখো। দ্বিতীয় pass-এ ডানদিকের running product গুণ করে final result তৈরি করো।
+
+Result প্রথমে prefix product দিয়ে পূরণ হয়। দ্বিতীয় pass suffix product গুণ করে; division নেই বলে zero-র case আলাদা করতে হয় না।
+
+## Python solution
+
+```python
+def product_except_self(nums):
+    result = [1] * len(nums)
+    prefix = 1
+    for i, value in enumerate(nums):
+        result[i] = prefix
+        prefix *= value
+    suffix = 1
+    for i in range(len(nums) - 1, -1, -1):
+        result[i] *= suffix
+        suffix *= nums[i]
+    return result
+```
+
+## JavaScript solution
+
+```javascript
+function productExceptSelf(nums) {
+  const result = new Array(nums.length).fill(1);
+  let prefix = 1;
+  for (let i = 0; i < nums.length; i += 1) {
+    result[i] = prefix;
+    prefix *= nums[i];
+  }
+  let suffix = 1;
+  for (let i = nums.length - 1; i >= 0; i -= 1) {
+    result[i] *= suffix;
+    suffix *= nums[i];
+  }
+  return result;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) extra, output বাদে — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- একটি zero থাকলে zero বাদে একটি অবস্থানে nonzero product থাকতে পারে।
+- দুই বা তার বেশি zero থাকলে সব ফল zero।
+- Division ব্যবহার নয়।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: maximum-subarray, two-sum।

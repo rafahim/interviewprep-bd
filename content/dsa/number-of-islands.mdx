@@ -1,0 +1,134 @@
+---
+{
+  "slug": "number-of-islands",
+  "title": "Number of Islands",
+  "category": "dsa",
+  "topic": "Graphs & BFS/DFS",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Bloomberg"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "'1' ও '0' দিয়ে তৈরি grid-এ 4-directionally connected land cell-এর island সংখ্যা বের করো।",
+  "approach": "প্রতিটি unvisited land cell পেলে island count বাড়াও এবং DFS দিয়ে সম্পূর্ণ connected component mark করো। পরের scan-এ marked cell আর গণনা হবে না।",
+  "complexity": {
+    "time": "O(rows × cols)",
+    "space": "O(rows × cols)"
+  },
+  "edges": [
+    "Empty grid হলে 0।",
+    "Diagonal adjacency island যুক্ত করে না।",
+    "Recursive DFS খুব বড় grid-এ recursion limit ছাড়াতে পারে।"
+  ],
+  "related": [],
+  "front": "DFS-এ visited cell mark না করলে কী সমস্যা হয়?",
+  "back": "একই land cell বারবার visit হতে পারে এবং প্রতিবেশীরা একে অন্যকে পুনরায় call করে অনন্ত recursion বা অতিরিক্ত কাজ তৈরি করতে পারে।",
+  "summary": "প্রতিটি unvisited land cell পেলে island count বাড়াও এবং DFS দিয়ে সম্পূর্ণ connected component mark করো। পরের scan-এ marked cell আর গণনা হবে না।",
+  "tags": [
+    "graphs",
+    "bfs",
+    "dfs",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "grid = [[\"1\",\"1\",\"0\"],[\"1\",\"0\",\"0\"],[\"0\",\"0\",\"1\"]]",
+    "output": "2"
+  },
+  "order": 14
+}
+---
+
+## Problem
+
+'1' ও '0' দিয়ে তৈরি grid-এ 4-directionally connected land cell-এর island সংখ্যা বের করো।
+
+## Example
+
+**Input:** `grid = [["1","1","0"],["1","0","0"],["0","0","1"]]`
+
+**Output:** `2`
+
+## Approach বাংলায়
+
+প্রতিটি unvisited land cell পেলে island count বাড়াও এবং DFS দিয়ে সম্পূর্ণ connected component mark করো। পরের scan-এ marked cell আর গণনা হবে না।
+
+প্রতিটি unseen land cell একটি নতুন island শুরু করে। DFS চলাকালে cell-কে water হিসেবে mark করায় সেটি দ্বিতীয়বার count হবে না।
+
+## Python solution
+
+```python
+def num_islands(grid):
+    if not grid or not grid[0]:
+        return 0
+    rows, cols = len(grid), len(grid[0])
+    count = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '1':
+                count += 1
+                stack = [(r, c)]
+                grid[r][c] = '0'
+                while stack:
+                    x, y = stack.pop()
+                    for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                        if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] == '1':
+                            grid[nx][ny] = '0'
+                            stack.append((nx, ny))
+    return count
+```
+
+## JavaScript solution
+
+```javascript
+function numIslands(grid) {
+  if (grid.length === 0 || grid[0].length === 0) return 0;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  let islands = 0;
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      if (grid[r][c] !== "1") continue;
+      islands += 1;
+      const stack = [[r, c]];
+      grid[r][c] = "0";
+      while (stack.length) {
+        const [x, y] = stack.pop();
+        for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) {
+          if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && grid[nx][ny] === "1") {
+            grid[nx][ny] = "0";
+            stack.push([nx, ny]);
+          }
+        }
+      }
+    }
+  }
+  return islands;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(rows × cols) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(rows × cols) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Empty grid হলে 0।
+- Diagonal adjacency island যুক্ত করে না।
+- Recursive DFS খুব বড় grid-এ recursion limit ছাড়াতে পারে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: clone-graph, course-schedule।

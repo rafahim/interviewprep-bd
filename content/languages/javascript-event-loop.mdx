@@ -1,0 +1,83 @@
+---
+{
+  "slug": "javascript-event-loop",
+  "title": "Explain the JavaScript Event Loop",
+  "category": "languages",
+  "topic": "JavaScript Runtime",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Amazon",
+    "Frontend Teams"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Call stack, task queue, microtask queue এবং event loop-এর সম্পর্ক ব্যাখ্যা করো।",
+  "approach": "Synchronous stack আগে চলে। Stack empty হলে microtasks যেমন Promise callbacks সাধারণত পরবর্তী task-এর আগে drain হয়; timers ও I/O callback task scheduling-এর মাধ্যমে পরে চলে। Exact host details browser ও Node.js-এ কিছুটা আলাদা।",
+  "complexity": {
+    "time": "Depends on each callback; one long callback blocks the thread",
+    "space": "Task and microtask queues"
+  },
+  "edges": [
+    "setTimeout(..., 0) immediate execution বোঝায় না।",
+    "Microtask loop অনবরত চললে rendering starve করতে পারে।",
+    "Node event loop phases browser-এর সঙ্গে এক নয়।"
+  ],
+  "related": [
+    "javascript-closures",
+    "javascript-async"
+  ],
+  "front": "Resolved Promise callback setTimeout callback-এর আগে কেন চলতে পারে?",
+  "back": "Promise reaction microtask queue-তে schedule হয়; current synchronous stack-এর পরে microtasks process হয়, আর timer callback future task হিসেবে execute হয়।",
+  "summary": "Synchronous stack আগে চলে। Stack empty হলে microtasks যেমন Promise callbacks সাধারণত পরবর্তী task-এর আগে drain হয়; timers ও I/O callback task scheduling-এর মাধ্যমে পরে চলে। Exact host details browser ও Node.js-এ কিছুটা আ",
+  "tags": [
+    "javascript",
+    "runtime",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "Call stack, task queue, microtask queue এবং event loop-এর সম্পর্ক ব্যাখ্যা করো।",
+    "output": "Promise reaction microtask queue-তে schedule হয়; current synchronous stack-এর পরে microtasks process হয়, আর timer callback future task হিসেবে execute হয়।"
+  },
+  "order": 47
+}
+---
+
+## Interview prompt
+
+Call stack, task queue, microtask queue এবং event loop-এর সম্পর্ক ব্যাখ্যা করো।
+
+## Explanation বাংলায়
+
+Synchronous stack আগে চলে। Stack empty হলে microtasks যেমন Promise callbacks সাধারণত পরবর্তী task-এর আগে drain হয়; timers ও I/O callback task scheduling-এর মাধ্যমে পরে চলে। Exact host details browser ও Node.js-এ কিছুটা আলাদা।
+
+## Example
+
+```javascript
+console.log("start");
+setTimeout(() => console.log("timer"), 0);
+Promise.resolve().then(() => console.log("promise"));
+console.log("end");
+```
+
+সাধারণ browser runtime-এ output order: start, end, promise, timer। Synchronous log আগে হয়, Promise callback microtask, timer callback পরে task হিসেবে চলে।
+
+## Common mistakes
+
+- setTimeout(..., 0) immediate execution বোঝায় না।
+- Microtask loop অনবরত চললে rendering starve করতে পারে।
+- Node event loop phases browser-এর সঙ্গে এক নয়।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-closures, javascript-async

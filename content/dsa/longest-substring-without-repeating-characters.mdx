@@ -1,0 +1,118 @@
+---
+{
+  "slug": "longest-substring-without-repeating-characters",
+  "title": "Longest Substring Without Repeating Characters",
+  "category": "dsa",
+  "topic": "Sliding Window",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Bloomberg"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "একটি string-এর longest substring-এর length বের করো যেখানে কোনো character পুনরাবৃত্তি হয় না।",
+  "approach": "Sliding window-এর left pointer রাখো এবং প্রতিটি character-এর সর্বশেষ index map-এ সংরক্ষণ করো। duplicate current window-এর ভেতরে হলে left pointer তার পরের position-এ সরাও।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(k)"
+  },
+  "edges": [
+    "Empty string-এর উত্তর 0।",
+    "একই character আগের window-এর বাইরে থাকলে left pointer পিছনে নেওয়া যাবে না।",
+    "Substring contiguous হতে হবে।"
+  ],
+  "related": [
+    "valid-anagram",
+    "group-anagrams"
+  ],
+  "front": "Sliding window-তে left pointer `max` দিয়ে update করার কারণ কী?",
+  "back": "আগের duplicate index current window-এর বাইরে হতে পারে। left-কে পিছিয়ে দিলে ইতিমধ্যে বাতিল করা character আবার window-তে ঢুকে যাবে।",
+  "summary": "Sliding window-এর left pointer রাখো এবং প্রতিটি character-এর সর্বশেষ index map-এ সংরক্ষণ করো। duplicate current window-এর ভেতরে হলে left pointer তার পরের position-এ সরাও।",
+  "tags": [
+    "sliding",
+    "window",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "s = \"abcabcbb\"",
+    "output": "3, longest substring হলো \"abc\""
+  },
+  "order": 11
+}
+---
+
+## Problem
+
+একটি string-এর longest substring-এর length বের করো যেখানে কোনো character পুনরাবৃত্তি হয় না।
+
+## Example
+
+**Input:** `s = "abcabcbb"`
+
+**Output:** `3, longest substring হলো "abc"`
+
+## Approach বাংলায়
+
+Sliding window-এর left pointer রাখো এবং প্রতিটি character-এর সর্বশেষ index map-এ সংরক্ষণ করো। duplicate current window-এর ভেতরে হলে left pointer তার পরের position-এ সরাও।
+
+`last_seen` map প্রতিটি character-এর recent index রাখে। Left pointer কখনো পিছনে যায় না, তাই প্রত্যেক index সর্বোচ্চ কয়েকবার process হয়।
+
+## Python solution
+
+```python
+def length_of_longest_substring(s):
+    last_seen = {}
+    left = 0
+    best = 0
+    for right, char in enumerate(s):
+        if char in last_seen and last_seen[char] >= left:
+            left = last_seen[char] + 1
+        last_seen[char] = right
+        best = max(best, right - left + 1)
+    return best
+```
+
+## JavaScript solution
+
+```javascript
+function lengthOfLongestSubstring(s) {
+  const lastSeen = new Map();
+  let left = 0;
+  let best = 0;
+  for (let right = 0; right < s.length; right += 1) {
+    const char = s[right];
+    if (lastSeen.has(char) && lastSeen.get(char) >= left) {
+      left = lastSeen.get(char) + 1;
+    }
+    lastSeen.set(char, right);
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(k) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Empty string-এর উত্তর 0।
+- একই character আগের window-এর বাইরে থাকলে left pointer পিছনে নেওয়া যাবে না।
+- Substring contiguous হতে হবে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: valid-anagram, group-anagrams।

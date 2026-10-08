@@ -1,0 +1,77 @@
+---
+{
+  "slug": "acid-transactions",
+  "title": "ACID Transactions",
+  "category": "database",
+  "topic": "Database Internals",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Stripe",
+    "Microsoft"
+  ],
+  "languages": [
+    "SQL",
+    "PostgreSQL"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "ACID-এর চারটি property ব্যাখ্যা করো এবং money transfer-এ কেন দরকার বোঝাও।",
+  "approach": "Atomicity সব-or-nothing commit, consistency invariant বজায় রাখা, isolation concurrent transaction-এর interaction নিয়ন্ত্রণ, durability commit-এর পর crash থেকেও data স্থায়ী থাকা বোঝায়। Debit ও credit একই transaction-এ থাকলে partial transfer এড়ানো যায়।",
+  "complexity": {
+    "time": "Transaction complexity workload ও isolation level-এর ওপর নির্ভর করে",
+    "space": "Transaction log, locks/MVCC versions"
+  },
+  "edges": [
+    "Consistency rule schema constraints ও application invariant-এ enforce করতে হয়।",
+    "Isolation level অনুযায়ী anomaly আলাদা হয়।",
+    "Durability storage configuration-এর ওপরও নির্ভরশীল।"
+  ],
+  "related": [
+    "database-indexes",
+    "sql-joins"
+  ],
+  "front": "ACID-এর কোন property debit-কে credit ছাড়া commit হতে বাধা দেয়?",
+  "back": "Atomicity দুই operation-কে একই logical transaction হিসেবে all-or-nothing করে। যেকোনো একটি operation ব্যর্থ হলে পুরো transaction rollback হওয়া উচিত.",
+  "summary": "Atomicity সব-or-nothing commit, consistency invariant বজায় রাখা, isolation concurrent transaction-এর interaction নিয়ন্ত্রণ, durability commit-এর পর crash থেকেও data স্থায়ী থাকা বোঝায়। Debit ও credit একই transaction-এ থাক",
+  "tags": [
+    "database",
+    "internals",
+    "database",
+    "medium"
+  ],
+  "examples": {
+    "input": "ACID-এর চারটি property ব্যাখ্যা করো এবং money transfer-এ কেন দরকার বোঝাও।",
+    "output": "Atomicity দুই operation-কে একই logical transaction হিসেবে all-or-nothing করে। যেকোনো একটি operation ব্যর্থ হলে পুরো transaction rollback হওয়া উচিত."
+  },
+  "order": 32
+}
+---
+
+## Core concept
+
+ACID-এর চারটি property ব্যাখ্যা করো এবং money transfer-এ কেন দরকার বোঝাও।
+
+## Explanation বাংলায়
+
+Atomicity সব-or-nothing commit, consistency invariant বজায় রাখা, isolation concurrent transaction-এর interaction নিয়ন্ত্রণ, durability commit-এর পর crash থেকেও data স্থায়ী থাকা বোঝায়। Debit ও credit একই transaction-এ থাকলে partial transfer এড়ানো যায়।
+
+## Practical example
+
+Money transfer-এ source account debit ও destination account credit একই transaction-এ করো। দুই operation-এর যেকোনোটি fail করলে rollback হবে; account balance-এর invariant database constraints ও business logic দিয়ে রক্ষা করতে হবে।
+
+## কীভাবে verify করবে
+
+একটি ছোট reproducible dataset দিয়ে expected output পরীক্ষা করো। Database-এ `EXPLAIN`/`EXPLAIN ANALYZE` বা সমতুল্য query plan দেখো, কিন্তু production data-তে expensive analysis চালানোর আগে impact বুঝে নাও। Performance-এর সিদ্ধান্ত শুধু table row count দিয়ে নয়, selectivity, access pattern, transaction contention এবং write volume দেখে নেওয়া উচিত।
+
+## Trade-offs and edge cases
+
+- Consistency rule schema constraints ও application invariant-এ enforce করতে হয়।
+- Isolation level অনুযায়ী anomaly আলাদা হয়।
+- Durability storage configuration-এর ওপরও নির্ভরশীল।
+
+Interview-তে কোনো feature-এর নাম বলার পাশাপাশি failure mode ব্যাখ্যা করো: NULL কী করে, duplicate key থাকলে কী হয়, concurrent transaction কীভাবে interact করে এবং retry safe কি না।
+
+## Related concepts
+
+database-indexes, sql-joins — এগুলো একসঙ্গে পড়লে indexing, data model এবং correctness-এর সম্পর্ক স্পষ্ট হবে।

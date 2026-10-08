@@ -1,0 +1,97 @@
+---
+{
+  "slug": "notification-system",
+  "title": "Design a Notification System",
+  "category": "system-design",
+  "topic": "Queues & Events",
+  "difficulty": "Medium",
+  "companies": [
+    "Uber",
+    "Amazon",
+    "LinkedIn"
+  ],
+  "languages": [
+    "Architecture",
+    "API Design"
+  ],
+  "frequency": "High",
+  "minutes": 30,
+  "problem": "Email, SMS, push ও in-app notification-কে preference, retry, deduplication এবং delivery tracking-সহ পাঠানোর system design করো.",
+  "approach": "Business event-কে outbox/queue-তে publish করো। Worker channel ও user preference দেখে provider call করে; attempts, response code এবং idempotency key সংরক্ষণ করে. Transient failure exponential backoff পায়; permanent failure dead-letter queue-তে যায়.",
+  "complexity": {
+    "time": "Enqueue O(1); delivery latency queue depth/provider SLA-এর ওপর নির্ভরশীল",
+    "space": "Templates, user preferences, delivery attempts, provider IDs"
+  },
+  "edges": [
+    "Provider timeout হলে send হয়েছিল কি না নিশ্চিত নাও হতে পারে; idempotency গুরুত্বপূর্ণ।",
+    "SMS/email consent এবং unsubscribe enforce করতে হবে।",
+    "Queue backlog monitor না করলে notification দেরি হবে।"
+  ],
+  "related": [
+    "rate-limiter",
+    "chat-system"
+  ],
+  "front": "Transactional outbox pattern কী সমস্যার সমাধান করে?",
+  "back": "Database commit ও message publish আলাদা operation হলে একটির success আর অন্যটির failure হতে পারে। Outbox business data-র সঙ্গে একই transaction-এ event লেখে; publisher পরে retry করে.",
+  "summary": "Business event-কে outbox/queue-তে publish করো। Worker channel ও user preference দেখে provider call করে; attempts, response code এবং idempotency key সংরক্ষণ করে. Transient failure exponential backoff পায়; permanent failur",
+  "tags": [
+    "queues",
+    "events",
+    "system-design",
+    "medium"
+  ],
+  "examples": {
+    "input": "Email, SMS, push ও in-app notification-কে preference, retry, deduplication এবং delivery tracking-সহ পাঠানোর system design করো.",
+    "output": "Database commit ও message publish আলাদা operation হলে একটির success আর অন্যটির failure হতে পারে। Outbox business data-র সঙ্গে একই transaction-এ event লেখে; publisher পরে retry করে."
+  },
+  "order": 26
+}
+---
+
+## Problem and scope
+
+Email, SMS, push ও in-app notification-কে preference, retry, deduplication এবং delivery tracking-সহ পাঠানোর system design করো.
+
+সিস্টেম design শুরু করার আগে interviewer-এর সঙ্গে scope ঠিক করো। এখানে মূল user journey-টি হলো: request authenticate/validate করা, durable state পরিবর্তন করা, response দেওয়া, এবং asynchronous কাজ থাকলে তা নির্ভরযোগ্যভাবে শেষ করা।
+
+## Functional and non-functional requirements
+
+Functional requirement হিসেবে queues & events-এর প্রধান user action এবং তার failure/unauthorized case cover করতে হবে। Non-functional দিক থেকে latency, throughput, availability, data durability, privacy এবং operational cost-এর মধ্যে কোনটি priority তা পরিষ্কার করে নাও। Interview-তে সংখ্যাগত traffic না দেওয়া হলে read/write ratio, peak traffic, data retention ও regional scope সম্পর্কে reasonable assumption স্পষ্টভাবে বলো—কল্পিত metric-কে fact হিসেবে উপস্থাপন কোরো না।
+
+## High-level architecture
+
+Business event-কে outbox/queue-তে publish করো। Worker channel ও user preference দেখে provider call করে; attempts, response code এবং idempotency key সংরক্ষণ করে. Transient failure exponential backoff পায়; permanent failure dead-letter queue-তে যায়.
+
+Typical request flow-এ CDN/load balancer বা API gateway request গ্রহণ করে, stateless application service authentication ও business rule প্রয়োগ করে, primary database durable state রাখে এবং cache repeated read accelerate করে। Queue/stream slow side effect-কে synchronous request থেকে আলাদা করে। Service boundary-গুলো product requirement অনুযায়ী রাখো; diagram-এ অপ্রয়োজনীয় microservice বাড়ানোর বদলে প্রথমে simplest reliable design ব্যাখ্যা করো।
+
+## API contract
+
+একটি সম্ভাব্য interface:
+
+```text
+POST /events adds a business event; GET /notifications lists in-app items; preference APIs manage channel consent.
+```
+
+Request validate করতে হবে, error response stable রাখতে হবে এবং create/side-effect operation retry হলে কী হবে তা সংজ্ঞায়িত করতে হবে। Mutation endpoint-এ idempotency key বা version check যেখানে দরকার ব্যবহার করো। API response-এ internal stack trace বা secret প্রকাশ করা যাবে না।
+
+## Data model and storage
+
+প্রধান durable entities: Templates, user preferences, delivery attempts, provider IDs। Storage-এ stable primary key, ownership/permission, created/updated timestamps এবং query pattern অনুযায়ী index রাখো। Read-heavy অংশ cache করা গেলেও canonical state কোথায় থাকে তা একটি authoritative store-এ স্পষ্ট হওয়া দরকার। Retention, deletion এবং audit requirements data model-এর অংশ।
+
+## Scaling strategy
+
+প্রথমে horizontal stateless scale, query/index tuning, bounded pagination এবং cache ব্যবহার করো। Traffic একটি key, tenant বা creator-এ কেন্দ্রীভূত হলে sharding বা fan-out strategy-এর skew বিবেচনা করতে হবে। Queue backlog, database connection saturation এবং p95/p99 latency-কে capacity signal হিসেবে ধরো; কেবল average latency যথেষ্ট নয়।
+
+## Reliability, security, and failure modes
+
+Delivery status attempt-level এ রাখলে provider retry ও fallback channel auditable হয়। Dead-letter queue-র message manual replay করার আগে consent, template version ও idempotency key পুনরায় যাচাই করতে হয়।
+
+Timeout, retry, exponential backoff with jitter এবং circuit breaking দরকার হতে পারে, কিন্তু retry idempotency ছাড়া duplicate effect তৈরি করতে পারে। Authentication ছাড়াও resource-level authorization, rate limiting, secret management, audit logs ও data minimization design-এর অন্তর্ভুক্ত। Dependency down থাকলে fail-open না fail-closed হবে তা business impact অনুযায়ী নির্ধারণ করো।
+
+## Trade-offs to discuss
+
+Provider timeout হলে send হয়েছিল কি না নিশ্চিত নাও হতে পারে; idempotency গুরুত্বপূর্ণ। SMS/email consent এবং unsubscribe enforce করতে হবে। Queue backlog monitor না করলে notification দেরি হবে। এগুলো design review-তে আগে থেকেই ধরো। Strong consistency, lower latency, implementation complexity এবং cost একসঙ্গে সর্বোত্তম করা যায় না; কোন trade-off বেছে নিয়েছ এবং কোন metric দেখে পরে revisit করবে তা বলতে হবে।
+
+## Interview walkthrough
+
+প্রথম 2–3 মিনিট clarification ও capacity assumptions, পরের অংশ API/data model, তারপর architecture ও main data flow, শেষে failure handling এবং bottleneck দিয়ে শেষ করো। পরিষ্কার diagram এবং নিজের assumption উচ্চস্বরে ব্যাখ্যা করা মুখস্থ component list বলার চেয়ে বেশি কার্যকর।

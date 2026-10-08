@@ -1,0 +1,92 @@
+---
+{
+  "slug": "api-error-handling",
+  "title": "Reliable API Error Handling",
+  "category": "languages",
+  "topic": "Backend Engineering",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Stripe",
+    "Startups"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "API error response কীভাবে consistent, debuggable এবং safe রাখা যায়?",
+  "approach": "Stable machine-readable error code, human message, request ID এবং appropriate HTTP status দাও। Internal stack trace বা secret client-কে দিও না। Validation, authentication, conflict, rate limit ও transient server failure আলাদা করো; retry policy idempotency বুঝে নির্ধারণ করো।",
+  "complexity": {
+    "time": "O(1) error mapping plus logging overhead",
+    "space": "Structured logs and request context"
+  },
+  "edges": [
+    "500 status-এ sensitive trace ফেরত দিও না।",
+    "Client validation error retry করা উচিত নয় সাধারণত।",
+    "Retry storm এড়াতে backoff ও jitter দরকার।"
+  ],
+  "related": [
+    "javascript-async",
+    "transactions-and-locking"
+  ],
+  "front": "Retryable error আর non-retryable error আলাদা করা জরুরি কেন?",
+  "back": "Validation বা authorization error retry করলে সমাধান হয় না; transient timeout retry করলে সফল হতে পারে। Status/code ও idempotency দেখে bounded retry policy করা উচিত।",
+  "summary": "Stable machine-readable error code, human message, request ID এবং appropriate HTTP status দাও। Internal stack trace বা secret client-কে দিও না। Validation, authentication, conflict, rate limit ও transient server failure ",
+  "tags": [
+    "backend",
+    "engineering",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "API error response কীভাবে consistent, debuggable এবং safe রাখা যায়?",
+    "output": "Validation বা authorization error retry করলে সমাধান হয় না; transient timeout retry করলে সফল হতে পারে। Status/code ও idempotency দেখে bounded retry policy করা উচিত।"
+  },
+  "order": 54
+}
+---
+
+## Interview prompt
+
+API error response কীভাবে consistent, debuggable এবং safe রাখা যায়?
+
+## Explanation বাংলায়
+
+Stable machine-readable error code, human message, request ID এবং appropriate HTTP status দাও। Internal stack trace বা secret client-কে দিও না। Validation, authentication, conflict, rate limit ও transient server failure আলাদা করো; retry policy idempotency বুঝে নির্ধারণ করো।
+
+## Example
+
+```typescript
+type ApiError = {
+  code: string;
+  message: string;
+  requestId: string;
+};
+
+function conflictError(requestId: string): ApiError {
+  return {
+    code: "RESOURCE_CONFLICT",
+    message: "The resource changed. Refresh and try again.",
+    requestId
+  };
+}
+```
+
+Error response-এ stable code ও request ID client support/debugging-এ সহায়তা করে। Internal exception details server-side structured logs-এ রাখো।
+
+## Common mistakes
+
+- 500 status-এ sensitive trace ফেরত দিও না।
+- Client validation error retry করা উচিত নয় সাধারণত।
+- Retry storm এড়াতে backoff ও jitter দরকার।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-async, transactions-and-locking

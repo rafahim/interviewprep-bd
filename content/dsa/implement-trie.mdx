@@ -1,0 +1,164 @@
+---
+{
+  "slug": "implement-trie",
+  "title": "Implement Trie (Prefix Tree)",
+  "category": "dsa",
+  "topic": "Trees & Strings",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Microsoft",
+    "Amazon"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Trie-তে insert(word), search(word), startsWith(prefix) implement করো।",
+  "approach": "প্রতি node-এ character অনুযায়ী child map এবং word শেষ হওয়ার boolean রাখো। প্রতিটি operation word-এর character ধরে path traverse করে।",
+  "complexity": {
+    "time": "O(L) per operation",
+    "space": "O(total characters)"
+  },
+  "edges": [
+    "Empty string insert/search semantics স্পষ্টভাবে সংজ্ঞায়িত করতে হবে; নিচের implementation empty word সমর্থন করে।",
+    "একই word বারবার insert করলে structure duplicate node তৈরি করে না।",
+    "Case-sensitive search।"
+  ],
+  "related": [
+    "valid-parentheses",
+    "group-anagrams"
+  ],
+  "front": "Trie-তে `isEnd` flag কেন দরকার?",
+  "back": "কোনো prefix-এর path থাকা মানেই পুরো শব্দ insert হয়েছে নয়। `isEnd` ঠিক কোন node-এ inserted word শেষ হয়েছে তা ধরে রাখে।",
+  "summary": "প্রতি node-এ character অনুযায়ী child map এবং word শেষ হওয়ার boolean রাখো। প্রতিটি operation word-এর character ধরে path traverse করে।",
+  "tags": [
+    "trees",
+    "strings",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "insert(\"apple\"), search(\"apple\"), search(\"app\"), startsWith(\"app\")",
+    "output": "true, false, true"
+  },
+  "order": 20
+}
+---
+
+## Problem
+
+Trie-তে insert(word), search(word), startsWith(prefix) implement করো।
+
+## Example
+
+**Input:** `insert("apple"), search("apple"), search("app"), startsWith("app")`
+
+**Output:** `true, false, true`
+
+## Approach বাংলায়
+
+প্রতি node-এ character অনুযায়ী child map এবং word শেষ হওয়ার boolean রাখো। প্রতিটি operation word-এর character ধরে path traverse করে।
+
+প্রতি node-এ child map এবং isEnd flag থাকে। Prefix path পাওয়া আর full word inserted থাকা আলাদা বিষয়, তাই terminal flag দরকার।
+
+## Python solution
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end = True
+
+    def search(self, word):
+        node = self._walk(word)
+        return node is not None and node.is_end
+
+    def starts_with(self, prefix):
+        return self._walk(prefix) is not None
+
+    def _walk(self, text):
+        node = self.root
+        for char in text:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+```
+
+## JavaScript solution
+
+```javascript
+class TrieNode {
+  constructor() {
+    this.children = new Map();
+    this.isEnd = false;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new TrieNode();
+  }
+
+  insert(word) {
+    let node = this.root;
+    for (const char of word) {
+      if (!node.children.has(char)) node.children.set(char, new TrieNode());
+      node = node.children.get(char);
+    }
+    node.isEnd = true;
+  }
+
+  search(word) {
+    const node = this.walk(word);
+    return node !== null && node.isEnd;
+  }
+
+  startsWith(prefix) {
+    return this.walk(prefix) !== null;
+  }
+
+  walk(text) {
+    let node = this.root;
+    for (const char of text) {
+      if (!node.children.has(char)) return null;
+      node = node.children.get(char);
+    }
+    return node;
+  }
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(L) per operation — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(total characters) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Empty string insert/search semantics স্পষ্টভাবে সংজ্ঞায়িত করতে হবে; নিচের implementation empty word সমর্থন করে।
+- একই word বারবার insert করলে structure duplicate node তৈরি করে না।
+- Case-sensitive search।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: valid-parentheses, group-anagrams।

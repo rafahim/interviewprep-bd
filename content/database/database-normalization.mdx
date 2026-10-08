@@ -1,0 +1,77 @@
+---
+{
+  "slug": "database-normalization",
+  "title": "Database Normalization",
+  "category": "database",
+  "topic": "Database Design",
+  "difficulty": "Medium",
+  "companies": [
+    "Microsoft",
+    "Amazon",
+    "Daraz"
+  ],
+  "languages": [
+    "SQL",
+    "PostgreSQL"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "1NF, 2NF, 3NF কী এবং কী ধরনের anomalies কমায়?",
+  "approach": "1NF column-এ atomic value চায়; 2NF composite key-এর proper subset-এর ওপর partial dependency সরায়; 3NF non-key attribute-এর transitive dependency কমায়। Normalization update anomaly কমায়, কিন্তু সব read workload-এর জন্য অতিরিক্ত join ভালো নাও হতে পারে।",
+  "complexity": {
+    "time": "Design-time concept; query cost depends on joins",
+    "space": "Normalized entities and foreign keys"
+  },
+  "edges": [
+    "Primary key ও functional dependency চিনতে হবে।",
+    "Denormalization সচেতন performance trade-off।",
+    "Normalization মানে সব duplicate data স্বয়ংক্রিয়ভাবে নিষিদ্ধ নয়।"
+  ],
+  "related": [
+    "sql-joins",
+    "acid-transactions"
+  ],
+  "front": "Normalization update anomaly কমায় কীভাবে?",
+  "back": "একই fact বহু row-তে copy থাকলে update-এর সময় কিছু row বদলে কিছু বাদ পড়তে পারে। Fact-কে এক authoritative place-এ রাখলে একই তথ্য একবার update করা যায়.",
+  "summary": "1NF column-এ atomic value চায়; 2NF composite key-এর proper subset-এর ওপর partial dependency সরায়; 3NF non-key attribute-এর transitive dependency কমায়। Normalization update anomaly কমায়, কিন্তু সব read workload-এর জন্য অত",
+  "tags": [
+    "database",
+    "design",
+    "database",
+    "medium"
+  ],
+  "examples": {
+    "input": "1NF, 2NF, 3NF কী এবং কী ধরনের anomalies কমায়?",
+    "output": "একই fact বহু row-তে copy থাকলে update-এর সময় কিছু row বদলে কিছু বাদ পড়তে পারে। Fact-কে এক authoritative place-এ রাখলে একই তথ্য একবার update করা যায়."
+  },
+  "order": 34
+}
+---
+
+## Core concept
+
+1NF, 2NF, 3NF কী এবং কী ধরনের anomalies কমায়?
+
+## Explanation বাংলায়
+
+1NF column-এ atomic value চায়; 2NF composite key-এর proper subset-এর ওপর partial dependency সরায়; 3NF non-key attribute-এর transitive dependency কমায়। Normalization update anomaly কমায়, কিন্তু সব read workload-এর জন্য অতিরিক্ত join ভালো নাও হতে পারে।
+
+## Practical example
+
+একটি order row-তে customer address প্রতিবার copy করলে customer address বদলালে বহু order update করতে হবে। Customer profile আলাদা table-এ রাখলে single source of truth পাওয়া যায়; historical shipping snapshot দরকার হলে সেটি আলাদা business rule হিসেবে রাখো।
+
+## কীভাবে verify করবে
+
+একটি ছোট reproducible dataset দিয়ে expected output পরীক্ষা করো। Database-এ `EXPLAIN`/`EXPLAIN ANALYZE` বা সমতুল্য query plan দেখো, কিন্তু production data-তে expensive analysis চালানোর আগে impact বুঝে নাও। Performance-এর সিদ্ধান্ত শুধু table row count দিয়ে নয়, selectivity, access pattern, transaction contention এবং write volume দেখে নেওয়া উচিত।
+
+## Trade-offs and edge cases
+
+- Primary key ও functional dependency চিনতে হবে।
+- Denormalization সচেতন performance trade-off।
+- Normalization মানে সব duplicate data স্বয়ংক্রিয়ভাবে নিষিদ্ধ নয়।
+
+Interview-তে কোনো feature-এর নাম বলার পাশাপাশি failure mode ব্যাখ্যা করো: NULL কী করে, duplicate key থাকলে কী হয়, concurrent transaction কীভাবে interact করে এবং retry safe কি না।
+
+## Related concepts
+
+sql-joins, acid-transactions — এগুলো একসঙ্গে পড়লে indexing, data model এবং correctness-এর সম্পর্ক স্পষ্ট হবে।

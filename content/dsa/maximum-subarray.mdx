@@ -1,0 +1,108 @@
+---
+{
+  "slug": "maximum-subarray",
+  "title": "Maximum Subarray",
+  "category": "dsa",
+  "topic": "Dynamic Programming",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Microsoft",
+    "LinkedIn"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "একটি non-empty integer array থেকে contiguous subarray-এর সর্বোচ্চ sum বের করো।",
+  "approach": "Kadane’s algorithm-এ বর্তমান অবস্থায় হয় নতুন subarray শুরু করি, নয়তো আগের running sum-এর সঙ্গে বর্তমান সংখ্যা যোগ করি। প্রতিটি ধাপে global best আপডেট হয়।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "সব সংখ্যা negative হলেও array non-empty হওয়ায় সবচেয়ে বড় element-ই উত্তর।",
+    "Subarray contiguous হতে হবে।",
+    "খালি subarray-এর sum শূন্য ধরে নেওয়া যাবে না।"
+  ],
+  "related": [
+    "coin-change"
+  ],
+  "front": "Kadane’s algorithm-এ running sum কেন max(current, running + current) হয়?",
+  "back": "আগের sum negative হলে সেটি যোগ করলে ফল খারাপ হবে; তখন নতুন subarray শুরু করা ভালো। নইলে আগের subarray চালিয়ে যাও।",
+  "summary": "Kadane’s algorithm-এ বর্তমান অবস্থায় হয় নতুন subarray শুরু করি, নয়তো আগের running sum-এর সঙ্গে বর্তমান সংখ্যা যোগ করি। প্রতিটি ধাপে global best আপডেট হয়।",
+  "tags": [
+    "dynamic",
+    "programming",
+    "dsa",
+    "medium"
+  ],
+  "examples": {
+    "input": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+    "output": "6, কারণ [4, -1, 2, 1]-এর sum 6"
+  },
+  "order": 5
+}
+---
+
+## Problem
+
+একটি non-empty integer array থেকে contiguous subarray-এর সর্বোচ্চ sum বের করো।
+
+## Example
+
+**Input:** `nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]`
+
+**Output:** `6, কারণ [4, -1, 2, 1]-এর sum 6`
+
+## Approach বাংলায়
+
+Kadane’s algorithm-এ বর্তমান অবস্থায় হয় নতুন subarray শুরু করি, নয়তো আগের running sum-এর সঙ্গে বর্তমান সংখ্যা যোগ করি। প্রতিটি ধাপে global best আপডেট হয়।
+
+প্রতিটি position-এ শেষ হওয়া সেরা subarray-এর sum রাখি। আগের running sum negative হলে current value দিয়ে নতুন subarray শুরু করা ভালো।
+
+## Python solution
+
+```python
+def max_subarray(nums):
+    best = current = nums[0]
+    for value in nums[1:]:
+        current = max(value, current + value)
+        best = max(best, current)
+    return best
+```
+
+## JavaScript solution
+
+```javascript
+function maxSubArray(nums) {
+  let current = nums[0];
+  let best = nums[0];
+  for (let i = 1; i < nums.length; i += 1) {
+    current = Math.max(nums[i], current + nums[i]);
+    best = Math.max(best, current);
+  }
+  return best;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- সব সংখ্যা negative হলেও array non-empty হওয়ায় সবচেয়ে বড় element-ই উত্তর।
+- Subarray contiguous হতে হবে।
+- খালি subarray-এর sum শূন্য ধরে নেওয়া যাবে না।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: climb-stairs, coin-change।

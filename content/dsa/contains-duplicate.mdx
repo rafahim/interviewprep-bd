@@ -1,0 +1,109 @@
+---
+{
+  "slug": "contains-duplicate",
+  "title": "Contains Duplicate",
+  "category": "dsa",
+  "topic": "Arrays & Hashing",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Apple",
+    "Google"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Integer array-তে কোনো value একাধিকবার থাকলে true, নইলে false ফেরত দাও।",
+  "approach": "Set-এর মধ্যে value রাখো। কোনো value আগে থেকেই set-এ থাকলে duplicate পাওয়া গেছে; না থাকলে সেটি যোগ করো।",
+  "complexity": {
+    "time": "O(n) average",
+    "space": "O(n)"
+  },
+  "edges": [
+    "Empty array-তে duplicate নেই।",
+    "Negative integer-ও সাধারণ value।",
+    "Set operation average O(1), worst-case implementation-dependent।"
+  ],
+  "related": [
+    "two-sum",
+    "valid-anagram"
+  ],
+  "front": "Duplicate detection-এ sorting-এর বদলে set নিলে কী লাভ?",
+  "back": "Set দিয়ে এক pass-এ average O(n) সময় পাওয়া যায়; sorting করলে সাধারণত O(n log n) এবং input order বদলে যেতে পারে।",
+  "summary": "Set-এর মধ্যে value রাখো। কোনো value আগে থেকেই set-এ থাকলে duplicate পাওয়া গেছে; না থাকলে সেটি যোগ করো।",
+  "tags": [
+    "arrays",
+    "hashing",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "nums = [1, 2, 3, 1]",
+    "output": "true"
+  },
+  "order": 8
+}
+---
+
+## Problem
+
+Integer array-তে কোনো value একাধিকবার থাকলে true, নইলে false ফেরত দাও।
+
+## Example
+
+**Input:** `nums = [1, 2, 3, 1]`
+
+**Output:** `true`
+
+## Approach বাংলায়
+
+Set-এর মধ্যে value রাখো। কোনো value আগে থেকেই set-এ থাকলে duplicate পাওয়া গেছে; না থাকলে সেটি যোগ করো।
+
+Set membership একটি value আগে দেখা হয়েছে কি না দ্রুত জানায়। Duplicate পাওয়া মাত্র early return করা যায়।
+
+## Python solution
+
+```python
+def contains_duplicate(nums):
+    seen = set()
+    for value in nums:
+        if value in seen:
+            return True
+        seen.add(value)
+    return False
+```
+
+## JavaScript solution
+
+```javascript
+function containsDuplicate(nums) {
+  const seen = new Set();
+  for (const value of nums) {
+    if (seen.has(value)) return true;
+    seen.add(value);
+  }
+  return false;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) average — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(n) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Empty array-তে duplicate নেই।
+- Negative integer-ও সাধারণ value।
+- Set operation average O(1), worst-case implementation-dependent।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: two-sum, valid-anagram।

@@ -1,0 +1,89 @@
+---
+{
+  "slug": "javascript-async",
+  "title": "Promises and async/await",
+  "category": "languages",
+  "topic": "JavaScript Async",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Frontend Teams"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Promise chain ও async/await দিয়ে asynchronous error handling এবং parallel task management বোঝাও।",
+  "approach": "async function সবসময় Promise ফেরত দেয়। await rejection হলে try/catch-এ ধরা যায়। Independent operation sequential await না করে Promise.all-এ চালালে wall-clock latency কমতে পারে, কিন্তু Promise.all fail-fast এবং cancellation নিজে থেকে করে না।",
+  "complexity": {
+    "time": "Runtime depends on operations; independent work can overlap",
+    "space": "Promise objects and task state"
+  },
+  "edges": [
+    "await সব operation parallel করে না।",
+    "Promise.all partial results return করে না যখন reject হয়।",
+    "Unhandled rejection logging ও cleanup দরকার।"
+  ],
+  "related": [
+    "javascript-event-loop",
+    "javascript-closures"
+  ],
+  "front": "দুইটি independent request-এর আগে আগে await দিলে latency বাড়তে পারে কেন?",
+  "back": "Sequential awaits প্রথমটি শেষ না হওয়া পর্যন্ত দ্বিতীয়টি start করে না। দুইটি Promise আগে তৈরি করে Promise.all দিলে অপেক্ষা overlap করতে পারে।",
+  "summary": "async function সবসময় Promise ফেরত দেয়। await rejection হলে try/catch-এ ধরা যায়। Independent operation sequential await না করে Promise.all-এ চালালে wall-clock latency কমতে পারে, কিন্তু Promise.all fail-fast এবং cancellati",
+  "tags": [
+    "javascript",
+    "async",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "Promise chain ও async/await দিয়ে asynchronous error handling এবং parallel task management বোঝাও।",
+    "output": "Sequential awaits প্রথমটি শেষ না হওয়া পর্যন্ত দ্বিতীয়টি start করে না। দুইটি Promise আগে তৈরি করে Promise.all দিলে অপেক্ষা overlap করতে পারে।"
+  },
+  "order": 51
+}
+---
+
+## Interview prompt
+
+Promise chain ও async/await দিয়ে asynchronous error handling এবং parallel task management বোঝাও।
+
+## Explanation বাংলায়
+
+async function সবসময় Promise ফেরত দেয়। await rejection হলে try/catch-এ ধরা যায়। Independent operation sequential await না করে Promise.all-এ চালালে wall-clock latency কমতে পারে, কিন্তু Promise.all fail-fast এবং cancellation নিজে থেকে করে না।
+
+## Example
+
+```javascript
+async function loadDashboard() {
+  const [profileResponse, statsResponse] = await Promise.all([
+    fetch("/api/profile"),
+    fetch("/api/stats")
+  ]);
+  if (!profileResponse.ok || !statsResponse.ok) {
+    throw new Error("Dashboard request failed");
+  }
+  return Promise.all([profileResponse.json(), statsResponse.json()]);
+}
+```
+
+দুইটি independent fetch একসঙ্গে শুরু হয়। Response status check, exception handling এবং প্রয়োজন হলে AbortController দিয়ে cancellation যোগ করতে হবে।
+
+## Common mistakes
+
+- await সব operation parallel করে না।
+- Promise.all partial results return করে না যখন reject হয়।
+- Unhandled rejection logging ও cleanup দরকার।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+javascript-event-loop, javascript-closures

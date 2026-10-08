@@ -1,0 +1,112 @@
+---
+{
+  "slug": "climbing-stairs",
+  "title": "Climbing Stairs",
+  "category": "dsa",
+  "topic": "Dynamic Programming",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Adobe",
+    "Google"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "প্রতিবার 1 বা 2 ধাপ নেওয়া গেলে n ধাপের সিঁড়িতে ওঠার মোট distinct উপায় গণনা করো।",
+  "approach": "শেষে পৌঁছানো যায় n-1 ধাপ থেকে 1 step অথবা n-2 ধাপ থেকে 2 steps নিয়ে। তাই recurrence Fibonacci: ways[n] = ways[n-1] + ways[n-2]।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)"
+  },
+  "edges": [
+    "n অন্তত 1।",
+    "Base case ways[1]=1, ways[2]=2।",
+    "বড় n-এর জন্য language integer overflow খেয়াল রাখতে হবে।"
+  ],
+  "related": [
+    "coin-change",
+    "maximum-subarray"
+  ],
+  "front": "Climbing Stairs কেন Fibonacci recurrence?",
+  "back": "শেষ move হয় 1 বা 2 step; তাই সব valid path-কে ways[n-1] ও ways[n-2] দুই disjoint group-এ ভাগ করা যায়।",
+  "summary": "শেষে পৌঁছানো যায় n-1 ধাপ থেকে 1 step অথবা n-2 ধাপ থেকে 2 steps নিয়ে। তাই recurrence Fibonacci: ways[n] = ways[n-1] + ways[n-2]।",
+  "tags": [
+    "dynamic",
+    "programming",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "n = 4",
+    "output": "5"
+  },
+  "order": 16
+}
+---
+
+## Problem
+
+প্রতিবার 1 বা 2 ধাপ নেওয়া গেলে n ধাপের সিঁড়িতে ওঠার মোট distinct উপায় গণনা করো।
+
+## Example
+
+**Input:** `n = 4`
+
+**Output:** `5`
+
+## Approach বাংলায়
+
+শেষে পৌঁছানো যায় n-1 ধাপ থেকে 1 step অথবা n-2 ধাপ থেকে 2 steps নিয়ে। তাই recurrence Fibonacci: ways[n] = ways[n-1] + ways[n-2]।
+
+শেষ ধাপের আগের অবস্থান n-1 বা n-2; তাই দুইটি আগের count যোগ হয়। কেবল দুইটি state রাখায় extra space constant।
+
+## Python solution
+
+```python
+def climb_stairs(n):
+    if n <= 2:
+        return n
+    one, two = 1, 2
+    for _ in range(3, n + 1):
+        one, two = two, one + two
+    return two
+```
+
+## JavaScript solution
+
+```javascript
+function climbStairs(n) {
+  if (n <= 2) return n;
+  let one = 1;
+  let two = 2;
+  for (let step = 3; step <= n; step += 1) {
+    const next = one + two;
+    one = two;
+    two = next;
+  }
+  return two;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(1) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- n অন্তত 1।
+- Base case ways[1]=1, ways[2]=2।
+- বড় n-এর জন্য language integer overflow খেয়াল রাখতে হবে।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: coin-change, maximum-subarray।

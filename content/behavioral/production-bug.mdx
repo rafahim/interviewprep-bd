@@ -1,0 +1,79 @@
+---
+{
+  "slug": "production-bug",
+  "title": "Describe a Bug You Investigated",
+  "category": "behavioral",
+  "topic": "Problem Solving",
+  "difficulty": "Medium",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Product Teams"
+  ],
+  "languages": [
+    "Communication",
+    "STAR"
+  ],
+  "frequency": "Medium",
+  "minutes": 10,
+  "problem": "Production বা project bug খুঁজে বের করার systematic approach STAR format-এ বোঝাও।",
+  "approach": "Impact establish করো, reproducible example তৈরি করো, logs/metrics inspect করো, smallest fix প্রয়োগ করো এবং regression test যোগ করো।",
+  "complexity": {
+    "time": "Answer in 1–2 minutes",
+    "space": "Root cause and prevention"
+  },
+  "edges": [
+    "Evidence ছাড়া root cause দাবি করো না।",
+    "Fix-এর validation step উল্লেখ করো।",
+    "Severity এবং user impact বোঝাও।"
+  ],
+  "related": [
+    "learning-new-skill",
+    "handling-feedback"
+  ],
+  "front": "Bug story-তে শুধু fix নয়, আর কী বলবে?",
+  "back": "কীভাবে issue detect/reproduce করেছিলে, কোন hypothesis পরীক্ষা করেছিলে, কী test দিয়ে fix validate করেছিলে এবং পুনরাবৃত্তি রোধে কী করেছিলে—এসব বলো.",
+  "summary": "Impact establish করো, reproducible example তৈরি করো, logs/metrics inspect করো, smallest fix প্রয়োগ করো এবং regression test যোগ করো।",
+  "tags": [
+    "problem",
+    "solving",
+    "behavioral",
+    "medium"
+  ],
+  "examples": {
+    "input": "Production বা project bug খুঁজে বের করার systematic approach STAR format-এ বোঝাও।",
+    "output": "কীভাবে issue detect/reproduce করেছিলে, কোন hypothesis পরীক্ষা করেছিলে, কী test দিয়ে fix validate করেছিলে এবং পুনরাবৃত্তি রোধে কী করেছিলে—এসব বলো."
+  },
+  "order": 38
+}
+---
+
+## Interview prompt
+
+Production বা project bug খুঁজে বের করার systematic approach STAR format-এ বোঝাও।
+
+## কেন interviewer প্রশ্নটি করেন
+
+এটি শুধু story শোনার প্রশ্ন নয়। Interviewer দেখতে চান তুমি context পরিষ্কার করতে পারো কি না, নিজের responsibility চেনো কি না, action নেওয়ার সময় কীভাবে সিদ্ধান্ত নিয়েছ এবং ফলাফল থেকে কী শিখেছ।
+
+## STAR framework
+
+**S — Situation:** একটি web page-এ কিছু interaction expected মতো কাজ করছিল না এবং issue সব screen size-এ একভাবে দেখা যাচ্ছিল না।
+
+**T — Task:** সমস্যাটি isolate করে existing behavior না ভেঙে fix করা প্রয়োজন ছিল।
+
+**A — Action:** আমি reproduction steps লিখি, viewport ও browser condition আলাদা করে পরীক্ষা করি, console/network signals দেখি এবং smallest affected component-এ change করি।
+
+**R — Result:** Fix-এর পর একই reproduction steps ও responsive checks আবার চালাই; ভবিষ্যৎ debugging-এর জন্য root cause ও verification note রেখে দিই।
+
+উপরের উত্তরটি একটি কাঠামোগত নমুনা। এটিকে নিজের বাস্তব অভিজ্ঞতার সঙ্গে মানিয়ে নাও; কোনো ঘটনা না ঘটলে সেটি নিজের জীবনের ঘটনা বলে দাবি না করে কাছাকাছি project example বা hypothetical approach স্পষ্টভাবে বলো। Result-এ পরিমাপযোগ্য evidence থাকলে ব্যবহার করো, কিন্তু সংখ্যা বানিয়ে বলো না।
+
+## Strong answer checklist
+
+- Evidence ছাড়া root cause দাবি করো না।
+- Fix-এর validation step উল্লেখ করো।
+- Severity এবং user impact বোঝাও।
+
+## Practice version
+
+নিজের উত্তর 60–120 সেকেন্ডে রেকর্ড করে শুনো। Situation ও Task সংক্ষিপ্ত রাখো; Action অংশে “আমি কী সিদ্ধান্ত নিয়েছিলাম” পরিষ্কার করো; Result-এ কী deliver হয়েছে, কার উপকার হয়েছে এবং পরেরবার কী বদলাবে তা বলো।

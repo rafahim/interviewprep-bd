@@ -1,0 +1,84 @@
+---
+{
+  "slug": "python-list-vs-tuple",
+  "title": "Python List vs Tuple",
+  "category": "languages",
+  "topic": "Python",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Local Startups"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Python list এবং tuple-এর মধ্যে পার্থক্য, ব্যবহার এবং mutability-এর প্রভাব ব্যাখ্যা করো।",
+  "approach": "List mutable, তাই append বা item assignment করা যায়। Tuple immutable sequence; fixed record বা hashable collection key হিসেবে কাজে লাগতে পারে যদি সব element hashable হয়। Tuple-এর immutability shallow—এর ভেতরে mutable object থাকলে সেটি বদলাতে পারে।",
+  "complexity": {
+    "time": "List/tuple access O(1) by index",
+    "space": "References to contained objects"
+  },
+  "edges": [
+    "Tuple nested mutable object-কে immutable বানায় না।",
+    "List সাধারণত dictionary key হতে পারে না।",
+    "Performance difference সাধারণত semantics-এর চেয়ে কম গুরুত্বপূর্ণ।"
+  ],
+  "related": [
+    "python-gil",
+    "memory-garbage-collection"
+  ],
+  "front": "Tuple সবসময় immutable data structure বোঝায় কি?",
+  "back": "Tuple-এর element binding বদলানো যায় না, কিন্তু tuple-এর মধ্যে থাকা list-এর content বদলাতে পারে। তাই immutability top-level sequence-এ প্রযোজ্য।",
+  "summary": "List mutable, তাই append বা item assignment করা যায়। Tuple immutable sequence; fixed record বা hashable collection key হিসেবে কাজে লাগতে পারে যদি সব element hashable হয়। Tuple-এর immutability shallow—এর ভেতরে mutable obj",
+  "tags": [
+    "python",
+    "languages",
+    "easy"
+  ],
+  "examples": {
+    "input": "Python list এবং tuple-এর মধ্যে পার্থক্য, ব্যবহার এবং mutability-এর প্রভাব ব্যাখ্যা করো।",
+    "output": "Tuple-এর element binding বদলানো যায় না, কিন্তু tuple-এর মধ্যে থাকা list-এর content বদলাতে পারে। তাই immutability top-level sequence-এ প্রযোজ্য।"
+  },
+  "order": 46
+}
+---
+
+## Interview prompt
+
+Python list এবং tuple-এর মধ্যে পার্থক্য, ব্যবহার এবং mutability-এর প্রভাব ব্যাখ্যা করো।
+
+## Explanation বাংলায়
+
+List mutable, তাই append বা item assignment করা যায়। Tuple immutable sequence; fixed record বা hashable collection key হিসেবে কাজে লাগতে পারে যদি সব element hashable হয়। Tuple-এর immutability shallow—এর ভেতরে mutable object থাকলে সেটি বদলাতে পারে।
+
+## Example
+
+```python
+items = ["a", "b"]
+items.append("c")
+
+point = (10, 20)
+
+record = {"name": "Fahim", "skills": ["Python"]}
+record["skills"].append("SQL")
+```
+
+এখানে list-এর structure mutate করা যায়; tuple-এর element binding পরিবর্তন করা যায় না, কিন্তু tuple-এর মধ্যে থাকা mutable object এখনও mutate হতে পারে।
+
+## Common mistakes
+
+- Tuple nested mutable object-কে immutable বানায় না।
+- List সাধারণত dictionary key হতে পারে না।
+- Performance difference সাধারণত semantics-এর চেয়ে কম গুরুত্বপূর্ণ।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+python-gil, memory-garbage-collection

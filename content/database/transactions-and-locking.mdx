@@ -1,0 +1,77 @@
+---
+{
+  "slug": "transactions-and-locking",
+  "title": "Transactions, Locks, and MVCC",
+  "category": "database",
+  "topic": "Database Concurrency",
+  "difficulty": "Hard",
+  "companies": [
+    "Google",
+    "Stripe",
+    "Amazon"
+  ],
+  "languages": [
+    "SQL",
+    "PostgreSQL"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "Concurrent transaction-এ dirty read, non-repeatable read, phantom এবং deadlock ব্যাখ্যা করো।",
+  "approach": "Locks conflicting access block করতে পারে; MVCC reader-কে snapshot version দেয়। Isolation level নির্ধারণ করে কোন anomaly সম্ভব। Deadlock হলে database সাধারণত transaction victim abort করে; application retry-কে bounded ও idempotent রাখতে হয়।",
+  "complexity": {
+    "time": "Depends on isolation level and contention",
+    "space": "Locks, row versions, transaction log"
+  },
+  "edges": [
+    "Long-running transaction vacuum/version cleanup আটকে দিতে পারে।",
+    "Deadlock-এর consistent lock order ঝুঁকি কমায়।",
+    "Retry করলে side effect duplicate হওয়ার সম্ভাবনা নিয়ন্ত্রণ করতে হবে।"
+  ],
+  "related": [
+    "acid-transactions",
+    "database-indexes"
+  ],
+  "front": "MVCC reader/writer contention কমাতে কীভাবে সাহায্য করে?",
+  "back": "অনেক MVCC system reader-কে committed version-এর snapshot দেয়; ফলে reader সাধারণত writer-এর row lock-এর জন্য অপেক্ষা না করেই পড়ে। তবে old version cleanup এবং write-write conflict এখনও গুরুত্বপূর্ণ.",
+  "summary": "Locks conflicting access block করতে পারে; MVCC reader-কে snapshot version দেয়। Isolation level নির্ধারণ করে কোন anomaly সম্ভব। Deadlock হলে database সাধারণত transaction victim abort করে; application retry-কে bounded ও id",
+  "tags": [
+    "database",
+    "concurrency",
+    "database",
+    "hard"
+  ],
+  "examples": {
+    "input": "Concurrent transaction-এ dirty read, non-repeatable read, phantom এবং deadlock ব্যাখ্যা করো।",
+    "output": "অনেক MVCC system reader-কে committed version-এর snapshot দেয়; ফলে reader সাধারণত writer-এর row lock-এর জন্য অপেক্ষা না করেই পড়ে। তবে old version cleanup এবং write-write conflict এখনও গুরুত্বপূর্ণ."
+  },
+  "order": 35
+}
+---
+
+## Core concept
+
+Concurrent transaction-এ dirty read, non-repeatable read, phantom এবং deadlock ব্যাখ্যা করো।
+
+## Explanation বাংলায়
+
+Locks conflicting access block করতে পারে; MVCC reader-কে snapshot version দেয়। Isolation level নির্ধারণ করে কোন anomaly সম্ভব। Deadlock হলে database সাধারণত transaction victim abort করে; application retry-কে bounded ও idempotent রাখতে হয়।
+
+## Practical example
+
+দুই transaction একই account balance পড়েই debit করলে lost update হতে পারে। Atomic conditional update, row lock বা appropriate isolation ব্যবহার করো এবং conflict হলে bounded retry করো।
+
+## কীভাবে verify করবে
+
+একটি ছোট reproducible dataset দিয়ে expected output পরীক্ষা করো। Database-এ `EXPLAIN`/`EXPLAIN ANALYZE` বা সমতুল্য query plan দেখো, কিন্তু production data-তে expensive analysis চালানোর আগে impact বুঝে নাও। Performance-এর সিদ্ধান্ত শুধু table row count দিয়ে নয়, selectivity, access pattern, transaction contention এবং write volume দেখে নেওয়া উচিত।
+
+## Trade-offs and edge cases
+
+- Long-running transaction vacuum/version cleanup আটকে দিতে পারে।
+- Deadlock-এর consistent lock order ঝুঁকি কমায়।
+- Retry করলে side effect duplicate হওয়ার সম্ভাবনা নিয়ন্ত্রণ করতে হবে।
+
+Interview-তে কোনো feature-এর নাম বলার পাশাপাশি failure mode ব্যাখ্যা করো: NULL কী করে, duplicate key থাকলে কী হয়, concurrent transaction কীভাবে interact করে এবং retry safe কি না।
+
+## Related concepts
+
+acid-transactions, database-indexes — এগুলো একসঙ্গে পড়লে indexing, data model এবং correctness-এর সম্পর্ক স্পষ্ট হবে।

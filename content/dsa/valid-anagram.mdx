@@ -1,0 +1,110 @@
+---
+{
+  "slug": "valid-anagram",
+  "title": "Valid Anagram",
+  "category": "dsa",
+  "topic": "Strings & Hashing",
+  "difficulty": "Easy",
+  "companies": [
+    "Amazon",
+    "Google",
+    "Adobe"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript"
+  ],
+  "frequency": "High",
+  "minutes": 20,
+  "problem": "দুইটি string-এ একই character একই সংখ্যায় থাকলে true ফেরত দাও।",
+  "approach": "দুই string-এর length আগে তুলনা করো। তারপর character frequency count করো অথবা sorting করে তুলনা করো। এখানে frequency map ব্যবহার করা হবে।",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(k)"
+  },
+  "edges": [
+    "Case sensitivity স্পষ্ট করে নিতে হবে; এই version case-sensitive।",
+    "Unicode character থাকলে language-এর character iteration semantics বুঝতে হবে।",
+    "দৈর্ঘ্য আলাদা হলে সঙ্গে সঙ্গে false।"
+  ],
+  "related": [
+    "group-anagrams",
+    "two-sum"
+  ],
+  "front": "শুধু character set তুলনা করলে anagram সঠিকভাবে শনাক্ত হয় না কেন?",
+  "back": "Set frequency উপেক্ষা করে। 'aab' এবং 'abb'-এর unique character একই হলেও count আলাদা; তাই frequency দরকার।",
+  "summary": "দুই string-এর length আগে তুলনা করো। তারপর character frequency count করো অথবা sorting করে তুলনা করো। এখানে frequency map ব্যবহার করা হবে।",
+  "tags": [
+    "strings",
+    "hashing",
+    "dsa",
+    "easy"
+  ],
+  "examples": {
+    "input": "s = \"anagram\", t = \"nagaram\"",
+    "output": "true"
+  },
+  "order": 9
+}
+---
+
+## Problem
+
+দুইটি string-এ একই character একই সংখ্যায় থাকলে true ফেরত দাও।
+
+## Example
+
+**Input:** `s = "anagram", t = "nagaram"`
+
+**Output:** `true`
+
+## Approach বাংলায়
+
+দুই string-এর length আগে তুলনা করো। তারপর character frequency count করো অথবা sorting করে তুলনা করো। এখানে frequency map ব্যবহার করা হবে।
+
+Counter/frequency map character count তুলনা করে; কেবল unique character বা sortedness নয়, প্রতিটি character-এর multiplicity গুরুত্বপূর্ণ।
+
+## Python solution
+
+```python
+from collections import Counter
+
+def is_anagram(s, t):
+    return Counter(s) == Counter(t)
+```
+
+## JavaScript solution
+
+```javascript
+function isAnagram(s, t) {
+  if (s.length !== t.length) return false;
+  const counts = new Map();
+  for (const char of s) counts.set(char, (counts.get(char) || 0) + 1);
+  for (const char of t) {
+    const count = counts.get(char);
+    if (!count) return false;
+    if (count === 1) counts.delete(char);
+    else counts.set(char, count - 1);
+  }
+  return counts.size === 0;
+}
+```
+
+## Complexity analysis
+
+- **Time:** O(n) — প্রতিটি item কতবার process হয় এবং sorting/heap থাকলে তার cost হিসাব করো।
+- **Extra space:** O(k) — input বাদে তৈরি করা auxiliary structure-এর ব্যবহার এই হিসাবে ধরা হয়েছে।
+
+## Edge cases
+
+- Case sensitivity স্পষ্ট করে নিতে হবে; এই version case-sensitive।
+- Unicode character থাকলে language-এর character iteration semantics বুঝতে হবে।
+- দৈর্ঘ্য আলাদা হলে সঙ্গে সঙ্গে false।
+
+## Interview follow-up
+
+প্রথমে brute-force approach এবং তার complexity ব্যাখ্যা করো, তারপর optimized approach কেন কাজ করে তার invariant বলো। এরপর input size, duplicate, empty input এবং worst-case memory নিয়ে interviewer-এর সঙ্গে কথা বলো।
+
+## Related practice
+
+এই pattern আরও ভালো বোঝার জন্য related question-গুলো করো: group-anagrams, two-sum।

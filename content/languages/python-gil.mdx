@@ -1,0 +1,88 @@
+---
+{
+  "slug": "python-gil",
+  "title": "What Is Python's GIL?",
+  "category": "languages",
+  "topic": "Python Runtime",
+  "difficulty": "Medium",
+  "companies": [
+    "Backend Teams",
+    "Startups"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "CPython-এর Global Interpreter Lock-এর কাজ এবং threading বনাম multiprocessing trade-off explain করো।",
+  "approach": "Traditional CPython build-এ GIL এক সময়ে একটি thread-কে Python bytecode execute করতে দেয়, ফলে CPU-bound pure Python thread সাধারণত একাধিক core-এ parallel speedup পায় না। I/O-bound threads অপেক্ষার সময়ে progress করতে পারে; multiprocessing আলাদা process ব্যবহার করে।",
+  "complexity": {
+    "time": "Depends on workload and process/thread model",
+    "space": "Thread stacks or process memory"
+  },
+  "edges": [
+    "সব Python implementation ও build-এ একই GIL behavior ধরে নেওয়া যাবে না।",
+    "Multiprocessing IPC ও memory overhead আনে।",
+    "Native extensions GIL release করতে পারে।"
+  ],
+  "related": [
+    "python-list-vs-tuple",
+    "memory-garbage-collection"
+  ],
+  "front": "I/O-bound workload-এ threading কেন তবু ভালো হতে পারে?",
+  "back": "Network বা disk wait-এর সময় একটি thread block হলেও অন্য thread কাজ করতে পারে; তাই GIL থাকা সত্ত্বেও latency hide ও concurrency উন্নত হতে পারে।",
+  "summary": "Traditional CPython build-এ GIL এক সময়ে একটি thread-কে Python bytecode execute করতে দেয়, ফলে CPU-bound pure Python thread সাধারণত একাধিক core-এ parallel speedup পায় না। I/O-bound threads অপেক্ষার সময়ে progress করতে পারে;",
+  "tags": [
+    "python",
+    "runtime",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "CPython-এর Global Interpreter Lock-এর কাজ এবং threading বনাম multiprocessing trade-off explain করো।",
+    "output": "Network বা disk wait-এর সময় একটি thread block হলেও অন্য thread কাজ করতে পারে; তাই GIL থাকা সত্ত্বেও latency hide ও concurrency উন্নত হতে পারে।"
+  },
+  "order": 50
+}
+---
+
+## Interview prompt
+
+CPython-এর Global Interpreter Lock-এর কাজ এবং threading বনাম multiprocessing trade-off explain করো।
+
+## Explanation বাংলায়
+
+Traditional CPython build-এ GIL এক সময়ে একটি thread-কে Python bytecode execute করতে দেয়, ফলে CPU-bound pure Python thread সাধারণত একাধিক core-এ parallel speedup পায় না। I/O-bound threads অপেক্ষার সময়ে progress করতে পারে; multiprocessing আলাদা process ব্যবহার করে।
+
+## Example
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+from urllib.request import urlopen
+
+def fetch(url):
+    with urlopen(url, timeout=5) as response:
+        return response.status
+
+urls = ["https://example.com"]
+with ThreadPoolExecutor(max_workers=4) as pool:
+    statuses = list(pool.map(fetch, urls))
+```
+
+Network wait-এর সময়ে thread অন্য কাজ করতে পারে। CPU-bound pure Python কাজের জন্য workload অনুযায়ী multiprocessing বা native/vectorized library বিবেচনা করো।
+
+## Common mistakes
+
+- সব Python implementation ও build-এ একই GIL behavior ধরে নেওয়া যাবে না।
+- Multiprocessing IPC ও memory overhead আনে।
+- Native extensions GIL release করতে পারে।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+python-list-vs-tuple, memory-garbage-collection

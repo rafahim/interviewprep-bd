@@ -1,0 +1,88 @@
+---
+{
+  "slug": "memory-garbage-collection",
+  "title": "Memory Management and Garbage Collection",
+  "category": "languages",
+  "topic": "Runtime Internals",
+  "difficulty": "Medium",
+  "companies": [
+    "Google",
+    "Microsoft",
+    "Backend Teams"
+  ],
+  "languages": [
+    "Python",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "frequency": "Medium",
+  "minutes": 15,
+  "problem": "Garbage collector reachability ব্যবহার করে memory মুক্ত করে কীভাবে এবং memory leak কেন হয়?",
+  "approach": "Tracing GC-তে roots থেকে reachable object mark করা হয়, unreachable object collect করা যায়। Garbage-collected language-এও event listener, timer, global cache বা closure-এর reference object reachable রাখলে memory leak হতে পারে।",
+  "complexity": {
+    "time": "GC pause and cost depend on runtime/heap",
+    "space": "Heap objects, roots, references"
+  },
+  "edges": [
+    "GC থাকা মানে memory leak অসম্ভব নয়।",
+    "Finalizer timing deterministic নাও হতে পারে।",
+    "Heap growth দেখে একা leak প্রমাণ হয় না; allocation/retention profile করো।"
+  ],
+  "related": [
+    "python-gil",
+    "python-list-vs-tuple"
+  ],
+  "front": "Garbage-collected app-এও memory leak কীভাবে সম্ভব?",
+  "back": "Object আর ব্যবহার না করলেও reachable reference থাকলে collector সেটি মুছতে পারে না; long-lived map বা detached DOM reference তার উদাহরণ।",
+  "summary": "Tracing GC-তে roots থেকে reachable object mark করা হয়, unreachable object collect করা যায়। Garbage-collected language-এও event listener, timer, global cache বা closure-এর reference object reachable রাখলে memory leak হতে ",
+  "tags": [
+    "runtime",
+    "internals",
+    "languages",
+    "medium"
+  ],
+  "examples": {
+    "input": "Garbage collector reachability ব্যবহার করে memory মুক্ত করে কীভাবে এবং memory leak কেন হয়?",
+    "output": "Object আর ব্যবহার না করলেও reachable reference থাকলে collector সেটি মুছতে পারে না; long-lived map বা detached DOM reference তার উদাহরণ।"
+  },
+  "order": 52
+}
+---
+
+## Interview prompt
+
+Garbage collector reachability ব্যবহার করে memory মুক্ত করে কীভাবে এবং memory leak কেন হয়?
+
+## Explanation বাংলায়
+
+Tracing GC-তে roots থেকে reachable object mark করা হয়, unreachable object collect করা যায়। Garbage-collected language-এও event listener, timer, global cache বা closure-এর reference object reachable রাখলে memory leak হতে পারে।
+
+## Example
+
+```javascript
+const cache = new Map();
+
+function remember(key, value) {
+  cache.set(key, value);
+}
+
+function forget(key) {
+  cache.delete(key);
+}
+```
+
+Long-lived cache limit না থাকলে সব key জমতে পারে। TTL, LRU eviction বা explicit deletion retention control করতে পারে।
+
+## Common mistakes
+
+- GC থাকা মানে memory leak অসম্ভব নয়।
+- Finalizer timing deterministic নাও হতে পারে।
+- Heap growth দেখে একা leak প্রমাণ হয় না; allocation/retention profile করো।
+
+## Interview-ready answer
+
+প্রথমে concept-টি এক বা দুই বাক্যে সংজ্ঞায়িত করো। তারপর code/runtime-এর ছোট example, trade-off এবং একটি failure case বলো। Performance claim করলে কোন runtime/version বা workload ধরে বলছ তা স্পষ্ট করো; implementation-specific behavior-কে সব language-এর নিয়ম হিসেবে উপস্থাপন কোরো না।
+
+## Related concepts
+
+python-gil, python-list-vs-tuple
